@@ -3,7 +3,7 @@ export interface City {
   name: string
   country: string
   description: string
-  cover_image_url: string
+  cover_image_url: string | null
   slug: string
   created_at: string
 }

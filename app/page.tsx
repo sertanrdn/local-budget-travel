@@ -74,7 +74,7 @@ export default function Home() {
         <div className="grid gap-4 sm:grid-cols-2">
           {FEATURED_CITIES.map((city) => (
             <Link key={city.slug} href={`/cities/${city.slug}`} className="group block">
-              <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-terracotta to-olive p-6 min-h-52 flex flex-col justify-between group-hover:brightness-105 transition-all duration-200">
+              <div className="relative rounded-3xl overflow-hidden bg-linear-to-br from-terracotta to-olive p-6 min-h-52 flex flex-col justify-between group-hover:brightness-105 transition-all duration-200">
                 {/* Decorative blob */}
                 <div className="absolute inset-0 opacity-10 pointer-events-none">
                   <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white" />

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
 import type { City } from '@/lib/types'
 
@@ -86,9 +87,19 @@ function CityCard({
     <Link href={`/cities/${city.slug}`} className="group block">
       <div className="rounded-2xl overflow-hidden border border-sand/60 bg-white group-hover:shadow-md transition-shadow duration-200 h-full">
         <div
-          className={`relative h-40 bg-gradient-to-br ${gradient} flex items-end p-4`}
+          className={`relative h-40 bg-linear-to-br ${gradient} flex items-end p-4`}
         >
-          <div className="absolute inset-0 bg-black/10" />
+          {city.cover_image_url && (
+            <Image
+              src={city.cover_image_url}
+              alt={city.name}
+              fill
+              className="object-cover"
+              loading="eager"
+              priority
+            />
+          )}
+          <div className="absolute inset-0 bg-black/30" />
           <div className="relative">
             <h2 className="text-xl font-bold text-white leading-tight">
               {city.name}
