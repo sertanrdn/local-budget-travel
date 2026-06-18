@@ -6,7 +6,7 @@ export default function NotFound() {
       <div className="text-6xl mb-4" aria-hidden>🗺️</div>
       <h1 className="text-2xl font-bold text-earth mb-2">City not found</h1>
       <p className="text-earth-muted mb-8">
-        We don not have a guide for that city yet — but we are working on it.
+        We do not have a guide for that city yet — but we are working on it.
       </p>
       <Link
         href="/cities"

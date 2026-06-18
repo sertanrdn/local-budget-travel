@@ -34,7 +34,7 @@ async function getActivityCountsByCategory(
 ): Promise<Record<string, number>> {
     const { data, error } = await supabase
         .from('activities')
-        .select('category_id, is_free')
+        .select('category_id')
         .eq('city_id', cityId)
 
     if (error || !data) return {}
@@ -81,7 +81,7 @@ export default async function CityPage({
 
             {/* Cover image */}
             {city.cover_image_url && (
-            <div className="relative h-72 md:h-86 w-full">
+            <div className="relative h-72 md:h-80 w-full">
                 <Image
                     src={city.cover_image_url}
                     alt={city.name}
