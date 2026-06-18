@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import type { City, Category } from "@/lib/types";
 
 async function getCityBySlug(citySlug: string): Promise<City | null> {
@@ -77,6 +78,20 @@ export default async function CityPage({
               </Link>
             </div>
           </header>
+
+            {/* Cover image */}
+            {city.cover_image_url && (
+            <div className="relative h-72 md:h-86 w-full">
+                <Image
+                    src={city.cover_image_url}
+                    alt={city.name}
+                    fill
+                    className="object-cover object-center"
+                    priority
+                />
+                <div className="absolute inset-0 bg-black/10" />
+            </div>
+            )}
     
           {/* City hero */}
           <section className="px-6 pt-12 pb-10 max-w-4xl mx-auto">
