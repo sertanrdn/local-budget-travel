@@ -147,7 +147,6 @@ export default async function CategoryPage({
               <ActivityCard
                 key={activity.id}
                 activity={activity}
-                citySlug={citySlug}
               />
             ))}
           </div>
