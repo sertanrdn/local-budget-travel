@@ -22,7 +22,8 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-4xl text-earth-muted/30">
-              📍
+              <span aria-hidden>📍</span>
+              <span className="sr-only">No photo available</span>
             </div>
           )}
         </div>
@@ -41,7 +42,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
                   : 'bg-terracotta/10 text-terracotta'
               }`}
             >
-              {activity.is_free ? 'Free' : activity.estimated_cost}
+              {activity.is_free ? 'Free' : activity.estimated_cost || "Paid"}
             </span>
           </div>
 

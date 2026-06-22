@@ -32,7 +32,7 @@ async function getCategoryByName(
     .from('categories')
     .select('*')
     .eq('city_id', cityId)
-    .ilike('name', name)
+    .eq('name', name)
     .single()
 
   if (error || !data) return null
