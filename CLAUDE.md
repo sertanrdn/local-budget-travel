@@ -20,8 +20,8 @@ A budget-friendly local travel guide for people who want to explore cities like 
 ## Pages to build (in order)
 1. `/` — Landing page (warm, minimal design — Wanderlog simplicity but warmer feel)
 2. `/cities` — All cities grid
-3. `/cities/[slug]` — City page with category cards
-4. `/cities/[slug]/[category]` — Activities list in a category
+3. `/cities/[city]` — City page with category cards
+4. `/cities/[city]/[category]` — Activities list in a category
 5. `/activity/[id]` — Activity detail page with map pin, photos, description, local tip
 
 **Later (do not build yet):**
@@ -107,7 +107,7 @@ app/
   page.tsx              (landing)
   cities/
     page.tsx            (all cities)
-    [slug]/
+    [city]/
       page.tsx          (city page)
       [category]/
         page.tsx        (category activities)
