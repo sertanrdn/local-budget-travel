@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import type { Activity, Category, City } from '@/lib/types'
-// import { ActivityMap } from '@/components/maps/ActivityMap'
+import { ActivityMap } from '@/components/maps/ActivityMap'
 
 async function getActivity(id: string): Promise<Activity | null> {
   const { data, error } = await supabase
@@ -221,11 +221,11 @@ export default async function ActivityPage({
             {activity.latitude && activity.longitude ? (
               <div className="bg-white border border-sand/80 rounded-2xl overflow-hidden">
                 <div className="h-56">
-                  {/* <ActivityMap
+                  <ActivityMap
                     lat={activity.latitude}
                     lng={activity.longitude}
                     title={activity.title}
-                  /> */}
+                  />
                 </div>
                 <a
                   href={`https://www.openstreetmap.org/?mlat=${activity.latitude}&mlon=${activity.longitude}&zoom=16`}
