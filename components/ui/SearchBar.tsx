@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 
 interface City {
   name: string
@@ -9,16 +10,27 @@ interface City {
   slug: string
 }
 
-const CITIES: City[] = [
-  { name: 'Istanbul', country: 'Turkey', slug: 'istanbul' },
-]
+// const CITIES: City[] = [
+//   { name: 'Istanbul', country: 'Turkey', slug: 'istanbul' },
+// ]
 
 export function SearchBar() {
   const [query, setQuery] = useState('')
+  const [cities, setCities] = useState<City[]>([])
+
+  useEffect(() => {
+    supabase
+      .from('cities')
+      .select('name, country, slug')
+      .order('name')
+      .then(({ data }) => {
+        if (data) setCities(data)
+      })
+  }, [])
 
   const results =
     query.length > 0
-      ? CITIES.filter((c) =>
+      ? cities.filter((c) =>
           c.name.toLowerCase().includes(query.toLowerCase())
         )
       : []
