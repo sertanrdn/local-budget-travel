@@ -13,11 +13,23 @@ export function ActivityMap({ lat, lng, title }: ActivityMapProps) {
   const mapInstanceRef = useRef<unknown>(null)
 
   useEffect(() => {
-    if (!mapRef.current || mapInstanceRef.current) return
+    if (!mapRef.current) return
+
+    let isCancelled = false
 
     import('leaflet').then((leaflet) => {
+      if (isCancelled || !mapRef.current) return
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const L = (leaflet as any).default ?? leaflet
+
+      // If a Leaflet instance is already on this container, remove it first
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((mapRef.current as any)._leaflet_id) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(mapInstanceRef.current as any)?.remove()
+        mapInstanceRef.current = null
+      }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -27,7 +39,7 @@ export function ActivityMap({ lat, lng, title }: ActivityMapProps) {
         shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
       })
 
-      const map = L.map(mapRef.current!, {
+      const map = L.map(mapRef.current, {
         center: [lat, lng],
         zoom: 15,
         zoomControl: true,
@@ -55,7 +67,6 @@ export function ActivityMap({ lat, lng, title }: ActivityMapProps) {
         className: '',
       })
 
-      // Safe DOM element instead of HTML string — prevents XSS
       const popupTitle = document.createElement('strong')
       popupTitle.style.fontFamily = 'sans-serif'
       popupTitle.style.fontSize = '13px'
@@ -67,6 +78,7 @@ export function ActivityMap({ lat, lng, title }: ActivityMapProps) {
     })
 
     return () => {
+      isCancelled = true
       if (mapInstanceRef.current) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(mapInstanceRef.current as any).remove()
