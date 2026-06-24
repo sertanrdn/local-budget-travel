@@ -10,22 +10,35 @@ interface City {
   slug: string
 }
 
-// const CITIES: City[] = [
-//   { name: 'Istanbul', country: 'Turkey', slug: 'istanbul' },
-// ]
-
 export function SearchBar() {
   const [query, setQuery] = useState('')
   const [cities, setCities] = useState<City[]>([])
 
   useEffect(() => {
-    supabase
-      .from('cities')
-      .select('name, country, slug')
-      .order('name')
-      .then(({ data }) => {
-        if (data) setCities(data)
-      })
+    let cancelled = false
+
+    async function loadCities() {
+      const { data, error } = await supabase
+        .from('cities')
+        .select('name, country, slug')
+        .order('name')
+
+        if (cancelled) return
+
+        if (error) {
+          console.error('Failed to fetch cities:', error.message)
+          setCities([])
+          return
+        }
+
+        setCities(data ?? [])
+    }
+
+    void loadCities()
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const results =
