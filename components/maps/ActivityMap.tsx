@@ -15,8 +15,10 @@ export function ActivityMap({ lat, lng, title }: ActivityMapProps) {
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return
 
-    import('leaflet').then((L) => {
-      // Fix default icon paths broken by webpack
+    import('leaflet').then((leaflet) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const L = (leaflet as any).default ?? leaflet
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (L.Icon.Default.prototype as any)._getIconUrl
       L.Icon.Default.mergeOptions({
@@ -53,9 +55,13 @@ export function ActivityMap({ lat, lng, title }: ActivityMapProps) {
         className: '',
       })
 
-      L.marker([lat, lng], { icon })
-        .addTo(map)
-        .bindPopup(`<strong style="font-family: sans-serif; font-size: 13px;">${title}</strong>`)
+      // Safe DOM element instead of HTML string — prevents XSS
+      const popupTitle = document.createElement('strong')
+      popupTitle.style.fontFamily = 'sans-serif'
+      popupTitle.style.fontSize = '13px'
+      popupTitle.textContent = title
+
+      L.marker([lat, lng], { icon }).addTo(map).bindPopup(popupTitle)
 
       mapInstanceRef.current = map
     })

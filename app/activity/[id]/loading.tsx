@@ -16,7 +16,7 @@ export default function Loading() {
             <div className="h-4 w-2 bg-sand/30 rounded animate-pulse" />
             <div className="h-4 w-16 bg-sand/40 rounded animate-pulse" />
             <div className="h-4 w-2 bg-sand/30 rounded animate-pulse" />
-            <div className="h-4 w-30 bg-sand/40 rounded animate-pulse" />
+            <div className="h-4 w-32 bg-sand/40 rounded animate-pulse" />
           </div>
   
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -58,7 +58,7 @@ export default function Loading() {
                 </div>
                 <div className="flex justify-between">
                   <div className="h-4 w-12 bg-sand/30 rounded animate-pulse" />
-                  <div className="h-4 w-18 bg-sand/50 rounded animate-pulse" />
+                  <div className="h-4 w-20 bg-sand/50 rounded animate-pulse" />
                 </div>
               </div>
               <div className="bg-white border border-sand/80 rounded-2xl overflow-hidden">

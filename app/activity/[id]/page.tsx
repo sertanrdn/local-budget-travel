@@ -99,7 +99,7 @@ export default async function ActivityPage({
               {category.name}
             </Link>
             <span>/</span>
-            <span className="text-earth truncate max-w-45">{activity.title}</span>
+            <span className="text-earth truncate max-w-48">{activity.title}</span>
           </nav>
         )}
 
@@ -218,7 +218,7 @@ export default async function ActivityPage({
             </div>
 
             {/* Map */}
-            {activity.latitude && activity.longitude ? (
+            {activity.latitude != null && activity.longitude != null ? (
               <div className="bg-white border border-sand/80 rounded-2xl overflow-hidden">
                 <div className="h-56">
                   <ActivityMap
