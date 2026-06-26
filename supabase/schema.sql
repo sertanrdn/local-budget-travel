@@ -433,3 +433,220 @@ insert into activities (title, description, category_id, city_id, address, latit
   true, 'Free',
   'Shows fill up fast on sunny evenings — arrive 30 minutes early and sit on the grass around the stage rather than the bleachers (better atmosphere). The schedule is at openluchttheater.nl. Bring a picnic from the Albert Cuyp market nearby.'
 );
+
+-- ============================================================
+-- Seed: Berlin
+-- ============================================================
+
+insert into cities (id, name, country, description, slug)
+values (
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Berlin',
+  'Germany',
+  'Raw, creative, historically layered and remarkably affordable. Berlin moves at its own pace — world-class galleries are free, parks are enormous, and the street food is better than most restaurants.',
+  'berlin'
+);
+
+-- Categories
+insert into categories (id, name, icon, city_id) values
+  ('c2000000-0000-0000-0000-000000000001', 'Viewpoints',   '🌅', 'a1b2c3d4-0000-0000-0000-000000000003'),
+  ('c2000000-0000-0000-0000-000000000002', 'Parks',        '🌳', 'a1b2c3d4-0000-0000-0000-000000000003'),
+  ('c2000000-0000-0000-0000-000000000003', 'Street Food',  '🌯', 'a1b2c3d4-0000-0000-0000-000000000003'),
+  ('c2000000-0000-0000-0000-000000000004', 'Markets',      '🛍️', 'a1b2c3d4-0000-0000-0000-000000000003'),
+  ('c2000000-0000-0000-0000-000000000005', 'Free Museums', '🏛️', 'a1b2c3d4-0000-0000-0000-000000000003'),
+  ('c2000000-0000-0000-0000-000000000006', 'Hikes',        '🥾', 'a1b2c3d4-0000-0000-0000-000000000003');
+
+-- Activities
+insert into activities (title, description, category_id, city_id, address, latitude, longitude, is_free, estimated_cost, local_tip) values
+
+-- Viewpoints
+(
+  'Teufelsberg Radar Station',
+  'A Cold War spy station built on a man-made hill of rubble from WWII Berlin. Two ruined golf-ball domes sit at the top, graffiti-covered and slowly collapsing, with panoramic views over the Grunewald forest and the city skyline. One of the strangest and most atmospheric places in Berlin.',
+  'c2000000-0000-0000-0000-000000000001',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Teufelsberg, Grunewald, Berlin',
+  52.4972, 13.2399,
+  false, '~€8 guided entry',
+  'Tours run on weekends — book ahead on the website. The hill itself (the highest point in Berlin) can be walked up for free at any time for views over the forest. The listening post is only accessible on tours but the exterior and surrounding forest are worth the walk alone.'
+),
+(
+  'Viktoriapark Kreuzberg',
+  'A steep park in Kreuzberg with a Prussian war memorial at the top and an artificial waterfall running down the hillside. From the summit you get a clear sightline north over the rooftops of Kreuzberg and Neukölln — the city stretching flat in every direction.',
+  'c2000000-0000-0000-0000-000000000001',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Kreuzbergstraße, Kreuzberg, Berlin',
+  52.4876, 13.3828,
+  true, 'Free',
+  'The park gets busy on warm evenings with Kreuzberg locals drinking beer on the slopes. In summer there''s a small open-air wine garden at the bottom — very relaxed. Five minutes'' walk from the U-Bahn Platz der Luftbrücke.'
+),
+(
+  'East Side Gallery Walk',
+  'A 1.3km stretch of the original Berlin Wall covered in murals painted by international artists in 1990, right after the wall fell. It runs along the Spree river — one side is the Wall, the other is the water.',
+  'c2000000-0000-0000-0000-000000000001',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Mühlenstraße, Friedrichshain, Berlin',
+  52.5053, 13.4397,
+  true, 'Free',
+  'Walk it from the Ostbahnhof end toward Warschauer Straße to go with the best light in the afternoon. Most tourists stop at the famous Brezhnev/Honecker kiss painting — keep walking to the less-photographed murals at the far end which are equally good. Best on a weekday to avoid selfie crowds.'
+),
+
+-- Parks
+(
+  'Tiergarten',
+  'Berlin''s central park — a 210-hectare former royal hunting ground in the middle of the city. Dense enough to feel genuinely wild in places. The main paths connect all the major monuments but the best parts are the quiet wooded sections where you can walk for an hour without hitting a road.',
+  'c2000000-0000-0000-0000-000000000002',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Tiergarten, Berlin',
+  52.5138, 13.3501,
+  true, 'Free',
+  'On summer Sundays the park fills with Berlin''s Turkish community for enormous family barbecues in the northern section near the Spree — the atmosphere is wonderful and nobody minds you sitting nearby. The Café am Neuen See in the park rents rowing boats cheaply and has a beer garden.'
+),
+(
+  'Tempelhof Field',
+  'The former Nazi-era airport, closed in 2008, whose runways and taxiways are now a vast public park. Berliners cycle, skate, kite-surf, barbecue and grow community gardens on what used to be active runways. Completely flat, completely strange, and completely Berlin.',
+  'c2000000-0000-0000-0000-000000000002',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Tempelhofer Damm, Tempelhof, Berlin',
+  52.4737, 13.4010,
+  true, 'Free',
+  'Rent a bicycle and cycle the full perimeter (about 6km) on the old runway — it''s flat, car-free, and very fast. The community gardens in the centre are fascinating to walk through. The airport terminal building (the largest building in Europe when built) can be toured on weekends.'
+),
+(
+  'Grunewald Forest and Wannsee',
+  'Berlin''s western forest — 3,000 hectares of pine and oak woodland stretching down to a chain of lakes where Berliners have swum since the 19th century. Wannsee beach is one of the largest inland beach resorts in Europe.',
+  'c2000000-0000-0000-0000-000000000002',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Grunewald, Berlin',
+  52.4800, 13.2300,
+  true, 'Free (Wannsee beach ~€5 in summer)',
+  'Take the S-Bahn S7 to Wannsee. The free swimming areas on the Kleiner Wannsee (just across the road from the paid beach) are where locals go. In autumn the Grunewald forest walk from Grunewald S-Bahn through to Teufelsberg is one of the best in the city.'
+),
+
+-- Street Food
+(
+  'Döner Kebab',
+  'Berlin''s most beloved food — and the best in the world. Turkish-Germans invented the modern Döner here in the 1970s and it remains the city''s defining street food. Lamb or mixed meat, shaved off a rotating spit, stuffed into fresh flatbread with vegetables and sauce.',
+  'c2000000-0000-0000-0000-000000000003',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Neuköllner Str., Neukölln / Kreuzberg, Berlin',
+  52.4917, 13.4200,
+  false, '~€5–7',
+  'Avoid the tourist-facing chains. The best Döner are in Neukölln and Kreuzberg — look for shops with long queues of Turkish-German locals. Imren Grill on Karl-Marx-Straße is a consistent local favourite. Ask for "alles drauf" (everything on) and eat it immediately.'
+),
+(
+  'Currywurst at Curry 36',
+  'Berlin''s other iconic street food: sliced sausage smothered in curried ketchup and served with chips. A post-war invention that became a city obsession. Curry 36 in Kreuzberg has been serving it since 1980.',
+  'c2000000-0000-0000-0000-000000000003',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Mehringdamm 36, Kreuzberg, Berlin',
+  52.4942, 13.3882,
+  false, '~€4',
+  'Order the Currywurst ohne Darm (without casing) — the texture is better. The queue at lunchtime looks long but moves fast. Eat standing at the metal counters; there''s something deeply Berlin about this. The Mehringdamm U-Bahn is 30 seconds away.'
+),
+(
+  'Falafel on Mauerstraße',
+  'Berlin has a long tradition of excellent falafel, particularly around the Mehringdamm area in Kreuzberg. Freshly fried falafel balls stuffed into pitta with tahini, pickled turnip, and chopped salad — filling, fast and cheap.',
+  'c2000000-0000-0000-0000-000000000003',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Mehringdamm, Kreuzberg, Berlin',
+  52.4944, 13.3884,
+  false, '~€4',
+  'Mustafa''s Gemüse Kebap on Mehringdamm sometimes has a 30-minute queue — it''s worth it but if you don''t want to wait, Dürüm Ziraat a few doors down is equally good with no queue at all. The vegetable döner (with roasted vegetables instead of meat) is also excellent and much cheaper.'
+),
+
+-- Markets
+(
+  'Mauerpark Flea Market',
+  'Berlin''s most atmospheric Sunday market, held along the route of the old Berlin Wall in Prenzlauer Berg. A mix of genuine flea market stalls (vinyl records, vintage clothing, DDR-era objects) and handmade craft sellers. The adjoining park fills with picnickers, buskers and a famous open-air karaoke stage.',
+  'c2000000-0000-0000-0000-000000000004',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Bernauer Straße 63-64, Prenzlauer Berg, Berlin',
+  52.5420, 13.4030,
+  true, 'Free to browse',
+  'The open-air karaoke (Bear Pit Karaoke) starts around 3pm on Sundays when the weather is good and draws a crowd of thousands — it''s one of the great free spectacles of Berlin. Come early for the flea market stalls; the good vinyl and vintage is gone by noon.'
+),
+(
+  'Türkischer Markt (Turkish Market)',
+  'A twice-weekly market on the Maybachufer canal in Neukölln, serving the large Turkish-German community of the neighbourhood. Fresh vegetables, olives, spices, flatbreads, and an energy completely unlike any tourist market.',
+  'c2000000-0000-0000-0000-000000000004',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Maybachufer, Neukölln, Berlin',
+  52.4887, 13.4262,
+  true, 'Free to browse',
+  'Runs Tuesday and Friday afternoons (12–6pm) along the canal. Buy fresh gözleme (stuffed flatbread, ~€3) from the women making them fresh. The canalside is pleasant to sit along afterward; Neukölln is one of Berlin''s most interesting neighbourhoods to walk through.'
+),
+(
+  'RAW Flohmarkt',
+  'A flea market held every weekend on the grounds of the RAW-Gelände — a derelict railway maintenance depot in Friedrichshain that has become an alternative cultural centre. More rough-edged than Mauerpark, with better prices and a younger crowd.',
+  'c2000000-0000-0000-0000-000000000004',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Revaler Str. 99, Friedrichshain, Berlin',
+  52.5076, 13.4540,
+  false, '~€1 entry',
+  'Saturday and Sunday, from 10am. The RAW compound also has skate parks, climbing walls, and bars — it''s a day out in itself. The flea market has genuinely good secondhand clothing and records at lower prices than Mauerpark. Ten minutes from Warschauer Straße S/U-Bahn.'
+),
+
+-- Free Museums
+(
+  'Gemäldegalerie (free under 18 / first Sunday of month)',
+  'One of the great European old masters collections — Rembrandt, Vermeer, Caravaggio, Botticelli, Raphael — in a purpose-built modern gallery near the Kulturforum. Permanently undervisited compared to its quality.',
+  'c2000000-0000-0000-0000-000000000005',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Matthäikirchplatz 8, Tiergarten, Berlin',
+  52.5079, 13.3647,
+  false, 'Free first Sunday of month, ~€12 other times',
+  'The first Sunday of every month is free entry. The gallery is never crowded — you can stand alone in front of Vermeer paintings that would have queues in Amsterdam or London. The adjacent Neue Nationalgalerie (Mies van der Rohe building) is also excellent and similarly undervisited.'
+),
+(
+  'Topographie des Terrors',
+  'A free permanent outdoor and indoor exhibition on the site of the former SS and Gestapo headquarters, documenting the apparatus of Nazi terror. One of the most important and sobering historical sites in the city.',
+  'c2000000-0000-0000-0000-000000000005',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Niederkirchnerstraße 8, Kreuzberg, Berlin',
+  52.5048, 13.3819,
+  true, 'Free',
+  'Allow 2–3 hours. The outdoor section follows the remaining stretch of the Berlin Wall along Niederkirchnerstraße — you can see original Wall sections here for free. The indoor exhibition is dense but essential. Goes well with a walk to Checkpoint Charlie (5 minutes away) though the memorial itself is heavily commercialised.'
+),
+(
+  'Hamburger Bahnhof — Museum für Gegenwart',
+  'Berlin''s contemporary art museum in a converted 19th-century railway station. The permanent collection includes Joseph Beuys, Andy Warhol, and Cy Twombly. The building — with its enormous hall and glass roof — is as impressive as the art.',
+  'c2000000-0000-0000-0000-000000000005',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Invalidenstraße 50-51, Mitte, Berlin',
+  52.5313, 13.3668,
+  false, 'Free first Thursday 4–8pm, ~€14 other times',
+  'Free on the first Thursday of every month from 4–8pm. The permanent Beuys installation alone is worth the trip. The museum is directly behind the main train station (Hauptbahnhof) and easy to combine with arriving or departing Berlin.'
+),
+
+-- Hikes
+(
+  'Müggelberge Forest and Müggelsee',
+  'Berlin''s highest natural point (115m — Berlin is very flat) sits in the middle of the Müggelberge forest in the far southeast of the city, above the Müggelsee lake. Proper trails through mixed woodland, swimming in the lake in summer, and a 19th-century forest tower at the top.',
+  'c2000000-0000-0000-0000-000000000006',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Müggelberge, Köpenick, Berlin',
+  52.4160, 13.6550,
+  true, 'Free',
+  'Take the S-Bahn S3 to Erkner, then tram 60 or 61 to Rüdersdorf. The hike from the tram stop to the summit and down to the lake takes about 2 hours at a relaxed pace. Swim in the Müggelsee (free, unsupervised beaches) and take the ferry back across — the whole day costs almost nothing.'
+),
+(
+  'Krumme Lanke to Schlachtensee',
+  'A 5km lakeside walk through the Grunewald forest connecting two swimming lakes in southwest Berlin. Flat, well-marked trail through pine forest, with free swimming spots along both lakes. A genuine escape from the city.',
+  'c2000000-0000-0000-0000-000000000006',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Krumme Lanke, Zehlendorf, Berlin',
+  52.4478, 13.2478,
+  true, 'Free',
+  'Take the U-Bahn U3 to Krumme Lanke. Walk the trail south along the lake to Schlachtensee and catch the S-Bahn S1 back from Schlachtensee station. Both lakes have free swimming in summer. The forest path between them takes about 45 minutes and is quiet even on summer weekends.'
+),
+(
+  'Köpenick Old Town and Forst Köpenick',
+  'A medieval island town at the confluence of the Spree and Dahme rivers, surrounded by water and forest. The old town centre is largely intact, the 17th-century castle is free to walk around, and the surrounding Köpenick Forest has trails extending for miles.',
+  'c2000000-0000-0000-0000-000000000006',
+  'a1b2c3d4-0000-0000-0000-000000000003',
+  'Altstadt Köpenick, Berlin',
+  52.4486, 13.5761,
+  true, 'Free',
+  'Take the S-Bahn S3 to Köpenick — about 40 minutes from central Berlin. The old town feels like a different city. Walk from the town centre into the Forst Köpenick along the Dahme river for an easy 5km loop. Very few tourists make it out here.'
+);
