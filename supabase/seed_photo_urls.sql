@@ -176,96 +176,96 @@ WHERE title = 'Vondelpark Open-Air Theatre'
 -- BERLIN
 -- Viewpoints
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://images.unsplash.com/photo-1665845042199-1ba3d96d63ef?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 WHERE title = 'Teufelsberg Radar Station'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://images.unsplash.com/photo-1631915486106-d1caddfdefb4?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 WHERE title = 'Viktoriapark Kreuzberg'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://images.unsplash.com/photo-1642764984363-a1d85a10b834?q=80&w=846&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 WHERE title = 'East Side Gallery Walk'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
 
 -- Parks
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://images.unsplash.com/photo-1645716756901-0e38dc2fca35?q=80&w=388&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 WHERE title = 'Tiergarten'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://images.unsplash.com/photo-1684513290731-c1d83dd7dcdf?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 WHERE title = 'Tempelhof Field'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://images.unsplash.com/photo-1667220474368-f9c0eff7debe?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 WHERE title = 'Grunewald Forest and Wannsee'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
 
 -- Street Food
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Hahnchen_Doner_mit_Gemuse_at_Mustafas_Gemusekebap.jpg/960px-Hahnchen_Doner_mit_Gemuse_at_Mustafas_Gemusekebap.jpg'
 WHERE title = 'Döner Kebab'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Currywurst-2024.jpg/960px-Currywurst-2024.jpg'
 WHERE title = 'Currywurst at Curry 36'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/20240815_Falafel_Plate_Restaurant_The_Hummusapiens_Berlin_anagoria.jpg/960px-20240815_Falafel_Plate_Restaurant_The_Hummusapiens_Berlin_anagoria.jpg'
 WHERE title = 'Falafel on Mauerstraße'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
 
 -- Markets
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Berlin-Mauerpark-Flohmarkt_%281%29.jpg/960px-Berlin-Mauerpark-Flohmarkt_%281%29.jpg'
 WHERE title = 'Mauerpark Flea Market'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Berlin_Wochenmarkt_Maybachufer-20241206-RM-151828.jpg/960px-Berlin_Wochenmarkt_Maybachufer-20241206-RM-151828.jpg'
 WHERE title = 'Türkischer Markt (Turkish Market)'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://images.unsplash.com/photo-1728293712933-4faf77c3b56a?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 WHERE title = 'RAW Flohmarkt'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
 
 -- Free Museums
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Berlin_Gem%C3%A4ldegalerie_008.jpg/960px-Berlin_Gem%C3%A4ldegalerie_008.jpg'
 WHERE title = 'Gemäldegalerie (free under 18 / first Sunday of month)'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Topographie_des_Terrors_Berliner_Mauer_Berlin_Germany_-_panoramio.jpg/960px-Topographie_des_Terrors_Berliner_Mauer_Berlin_Germany_-_panoramio.jpg'
 WHERE title = 'Topographie des Terrors'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Berlin_-_Hamburger_Bahnhof_Museum_f%C3%BCr_Gegenwart.jpg/960px-Berlin_-_Hamburger_Bahnhof_Museum_f%C3%BCr_Gegenwart.jpg'
 WHERE title = 'Hamburger Bahnhof — Museum für Gegenwart'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
 
 -- Hikes
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/M%C3%BCggelsee_Berlin.jpg/960px-M%C3%BCggelsee_Berlin.jpg'
 WHERE title = 'Müggelberge Forest and Müggelsee'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://images.unsplash.com/photo-1728306961131-02db4605c4dc?q=80&w=875&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 WHERE title = 'Krumme Lanke to Schlachtensee'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
  
 UPDATE activities 
-SET photo_url = ''
+SET photo_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Berlin_Luftbild_K%C3%B6penick_Altstadt_asv2024-07.jpg/960px-Berlin_Luftbild_K%C3%B6penick_Altstadt_asv2024-07.jpg'
 WHERE title = 'Köpenick Old Town and Forst Köpenick'
   AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
