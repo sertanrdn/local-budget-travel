@@ -172,3 +172,100 @@ UPDATE activities
 SET photo_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Vondelpark_Openluchttheater%2C_Amsterdam.jpg/960px-Vondelpark_Openluchttheater%2C_Amsterdam.jpg'
 WHERE title = 'Vondelpark Open-Air Theatre'
   AND city_id = (SELECT id FROM cities WHERE slug = 'amsterdam');
+
+-- BERLIN
+-- Viewpoints
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Teufelsberg Radar Station'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Viktoriapark Kreuzberg'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'East Side Gallery Walk'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+
+-- Parks
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Tiergarten'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Tempelhof Field'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Grunewald Forest and Wannsee'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+
+-- Street Food
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Döner Kebab'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Currywurst at Curry 36'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Falafel on Mauerstraße'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+
+-- Markets
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Mauerpark Flea Market'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Türkischer Markt (Turkish Market)'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'RAW Flohmarkt'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+
+-- Free Museums
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Gemäldegalerie (free under 18 / first Sunday of month)'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Topographie des Terrors'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Hamburger Bahnhof — Museum für Gegenwart'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+
+-- Hikes
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Müggelberge Forest and Müggelsee'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Krumme Lanke to Schlachtensee'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
+ 
+UPDATE activities 
+SET photo_url = ''
+WHERE title = 'Köpenick Old Town and Forst Köpenick'
+  AND city_id = (SELECT id FROM cities WHERE slug = 'berlin');
