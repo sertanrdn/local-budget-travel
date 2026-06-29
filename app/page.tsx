@@ -1,18 +1,8 @@
 import Link from 'next/link'
 import { SearchBar } from '@/components/ui/SearchBar'
-
-const FEATURED_CITIES = [
-  {
-    name: 'Istanbul',
-    country: 'Turkey',
-    slug: 'istanbul',
-    description:
-      "Two continents, one city — ancient bazaars, jaw-dropping viewpoints, and the world's best street food for under €2.",
-    freeCount: 28,
-    totalCount: 40,
-    emoji: '&#x1F54C;',
-  },
-]
+import Image from 'next/image'
+import { supabase } from '@/lib/supabase'
+import type { City } from '@/lib/types'
 
 const FEATURES = [
   {
@@ -32,7 +22,43 @@ const FEATURES = [
   },
 ]
 
-export default function Home() {
+const GRADIENTS = [
+  'from-terracotta to-olive',
+  'from-olive to-earth-muted',
+  'from-terracotta-dark to-earth-muted',
+]
+
+async function getCities(): Promise<City[]> {
+  const { data, error } = await supabase.from('cities').select('*').order('name')
+  if (error) return []
+  return data ?? []
+}
+
+async function getFreeCountsByCity(): Promise<Record<string, number>> {
+  const { data, error } = await supabase.from('activities').select('city_id, is_free')
+  if (error || !data) return {}
+  return data.reduce<Record<string, number>>((acc, row) => {
+    if (row.is_free) acc[row.city_id] = (acc[row.city_id] ?? 0) + 1
+    return acc
+  }, {})
+}
+
+async function getTotalCountsByCity(): Promise<Record<string, number>> {
+  const { data, error } = await supabase.from('activities').select('city_id')
+  if (error || !data) return {}
+  return data.reduce<Record<string, number>>((acc, row) => {
+    acc[row.city_id] = (acc[row.city_id] ?? 0) + 1
+    return acc
+  }, {})
+}
+
+export default async function Home() {
+  const [cities, freeCounts, totalCounts] = await Promise.all([
+    getCities(),
+    getFreeCountsByCity(),
+    getTotalCountsByCity(),
+  ])
+
   return (
     <div className="min-h-screen bg-warm-white text-earth font-sans">
       {/* Header */}
@@ -71,44 +97,48 @@ export default function Home() {
         <h2 className="text-lg font-semibold text-earth mb-5">
           Start exploring
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {FEATURED_CITIES.map((city) => (
-            <Link key={city.slug} href={`/cities/${city.slug}`} className="group block">
-              <div className="relative rounded-3xl overflow-hidden bg-linear-to-br from-terracotta to-olive p-6 min-h-52 flex flex-col justify-between group-hover:brightness-105 transition-all duration-200">
-                {/* Decorative blob */}
-                <div className="absolute inset-0 opacity-10 pointer-events-none">
-                  <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white" />
-                  <div className="absolute -bottom-10 -left-6 w-32 h-32 rounded-full bg-white" />
-                </div>
-
-                <div className="relative flex items-start justify-between">
-                  <div>
-                    <span
-                      className="text-4xl"
-                      aria-hidden
-                      dangerouslySetInnerHTML={{ __html: city.emoji }}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {cities.map((city, i) => {
+            const freeCount = freeCounts[city.id] ?? 0
+            const totalCount = totalCounts[city.id] ?? 0
+            const gradient = GRADIENTS[i % GRADIENTS.length]
+            return (
+              <Link key={city.slug} href={`/cities/${city.slug}`} className="group block">
+                <div className={`relative rounded-3xl overflow-hidden bg-linear-to-br ${gradient} min-h-52 flex flex-col justify-end group-hover:brightness-105 transition-all duration-200`}>
+                  {city.cover_image_url && (
+                    <Image
+                      src={city.cover_image_url}
+                      alt={city.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
-                    <h3 className="text-2xl font-bold text-white mt-3">
-                      {city.name}
-                    </h3>
-                    <p className="text-white/70 text-sm">{city.country}</p>
-                  </div>
-                  <div className="flex flex-col gap-1.5 items-end text-right shrink-0">
-                    <span className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-white text-xs font-medium">
-                      {city.freeCount} free
-                    </span>
-                    <span className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-white text-xs font-medium">
-                      {city.totalCount} total
-                    </span>
+                  )}
+                  <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="relative p-5">
+                    <div className="flex items-end justify-between gap-3">
+                      <div>
+                        <h3 className="text-xl font-bold text-white">{city.name}</h3>
+                        <p className="text-white/70 text-sm">{city.country}</p>
+                      </div>
+                      <div className="flex flex-col gap-1 items-end shrink-0">
+                        {freeCount > 0 && (
+                          <span className="bg-white/20 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-white text-xs font-medium">
+                            {freeCount} free
+                          </span>
+                        )}
+                        {totalCount > 0 && (
+                          <span className="bg-white/20 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-white text-xs font-medium">
+                            {totalCount} total
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                <p className="relative text-white/85 text-sm leading-relaxed mt-4">
-                  {city.description}
-                </p>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            )
+          })}
         </div>
       </section>
 
