@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
 import type { City } from '@/lib/types'
 
+export const revalidate = 0
+
 const FEATURES = [
   {
     icon: '&#x1F193;',
@@ -34,29 +36,30 @@ async function getCities(): Promise<City[]> {
   return data ?? []
 }
 
-async function getFreeCountsByCity(): Promise<Record<string, number>> {
+async function getActivityCountsByCity(): Promise<{
+  freeCounts: Record<string, number>
+  totalCounts: Record<string, number>
+}> {
   const { data, error } = await supabase.from('activities').select('city_id, is_free')
-  if (error || !data) return {}
-  return data.reduce<Record<string, number>>((acc, row) => {
-    if (row.is_free) acc[row.city_id] = (acc[row.city_id] ?? 0) + 1
-    return acc
-  }, {})
-}
+  if (error || !data) return { freeCounts: {}, totalCounts: {} }
 
-async function getTotalCountsByCity(): Promise<Record<string, number>> {
-  const { data, error } = await supabase.from('activities').select('city_id')
-  if (error || !data) return {}
-  return data.reduce<Record<string, number>>((acc, row) => {
-    acc[row.city_id] = (acc[row.city_id] ?? 0) + 1
-    return acc
-  }, {})
+  return data.reduce(
+    (acc, row) => {
+      acc.totalCounts[row.city_id] = (acc.totalCounts[row.city_id] ?? 0) + 1
+      if (row.is_free) acc.freeCounts[row.city_id] = (acc.freeCounts[row.city_id] ?? 0) + 1
+      return acc
+    },
+    { freeCounts: {}, totalCounts: {} } as {
+      freeCounts: Record<string, number>
+      totalCounts: Record<string, number>
+    }
+  )
 }
 
 export default async function Home() {
-  const [cities, freeCounts, totalCounts] = await Promise.all([
+  const [cities, {freeCounts, totalCounts}] = await Promise.all([
     getCities(),
-    getFreeCountsByCity(),
-    getTotalCountsByCity(),
+    getActivityCountsByCity(),
   ])
 
   return (
