@@ -81,7 +81,7 @@ export default async function CityPage({
 
             {/* Cover image */}
             {city.cover_image_url && (
-            <div className="relative h-72 md:h-80 w-full">
+            <div className="relative h-80 md:h-96 w-full">
                 <Image
                     src={city.cover_image_url}
                     alt={city.name}
