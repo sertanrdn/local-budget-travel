@@ -95,10 +95,21 @@ export default async function CityPage({
     
           {/* City hero */}
           <section className="px-6 pt-12 pb-10 max-w-4xl mx-auto">
-            <p className="text-terracotta text-sm font-semibold tracking-widest uppercase mb-2">
-              {city.country}
-            </p>
-            <h1 className="text-4xl font-bold text-earth mb-4">{city.name}</h1>
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div>
+                <p className="text-terracotta text-sm font-semibold tracking-widest uppercase mb-2">
+                  {city.country}
+                </p>
+                <h1 className="text-4xl font-bold text-earth mb-4">{city.name}</h1>
+              </div>
+              <Link
+                href={`/cities/${citySlug}/map`}
+                className="inline-flex items-center gap-1.5 bg-white border border-sand/80 hover:border-terracotta/40 hover:text-terracotta text-earth-muted text-sm font-medium px-4 py-2.5 rounded-full transition-colors shrink-0"
+              >
+                <span aria-hidden>🗺️</span>
+                View on map
+              </Link>
+            </div>
             {city.description && (
               <p className="text-earth-muted text-lg leading-relaxed max-w-2xl">
                 {city.description}
