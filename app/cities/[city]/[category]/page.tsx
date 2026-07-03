@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import type { Activity, Category, City } from '@/lib/types'
 import { ActivityCard } from '@/components/ui/ActivityCard'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
 
 // Convert URL slug back to category name for DB lookup
 // e.g. "street-food" → "Street Food", "free-museums" → "Free Museums"
@@ -77,23 +79,7 @@ export default async function CategoryPage({
 
   return (
     <div className="min-h-screen bg-warm-white text-earth font-sans">
-      {/* Header */}
-      <header className="px-6 py-5 border-b border-sand/60">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl" aria-hidden>&#x1F33F;</span>
-            <span className="font-semibold text-earth text-lg tracking-tight">
-              Local Budget Travel
-            </span>
-          </Link>
-          <Link
-            href={`/cities/${citySlug}`}
-            className="text-sm text-earth-muted hover:text-terracotta transition-colors"
-          >
-            ← {city.name}
-          </Link>
-        </div>
-      </header>
+      <Header />
 
       {/* Category hero */}
       <section className="px-6 pt-10 pb-8 max-w-4xl mx-auto">
@@ -153,11 +139,7 @@ export default async function CategoryPage({
         )}
       </main>
 
-      <footer className="px-6 py-8 text-center border-t border-sand">
-        <p className="text-earth-muted text-sm">
-          Local Budget Travel &mdash; explore more, spend less.
-        </p>
-      </footer>
+      <Footer />
     </div>
   )
 }
