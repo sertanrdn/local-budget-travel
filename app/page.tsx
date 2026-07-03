@@ -3,6 +3,8 @@ import { SearchBar } from '@/components/ui/SearchBar'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
 import type { City } from '@/lib/types'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
 
 export const revalidate = 0
 
@@ -64,21 +66,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-warm-white text-earth font-sans">
-      {/* Header */}
-      <header className="px-6 py-5 flex items-center justify-between max-w-4xl mx-auto">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl" aria-hidden>&#x1F33F;</span>
-          <span className="font-semibold text-earth text-lg tracking-tight">
-            Local Budget Travel
-          </span>
-        </div>
-        <Link
-          href="/cities"
-          className="text-sm text-earth-muted hover:text-terracotta transition-colors"
-        >
-          All cities &rarr;
-        </Link>
-      </header>
+      <Header />
 
       {/* Hero */}
       <section className="px-6 pt-14 pb-20 text-center max-w-2xl mx-auto">
@@ -177,13 +165,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="px-6 py-8 text-center border-t border-sand">
-        <p className="text-earth-muted text-sm">
-          Local Budget Travel &mdash; explore more, spend less.
-        </p>
-      </footer>
+      <Footer />
     </div>
   )
 }
