@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import type { Activity, Category, City } from '@/lib/types'
 import { ActivityMap } from '@/components/maps/ActivityMap'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
 
 async function getActivity(id: string): Promise<Activity | null> {
   const { data, error } = await supabase
@@ -57,25 +59,7 @@ export default async function ActivityPage({
 
   return (
     <div className="min-h-screen bg-warm-white text-earth font-sans">
-      {/* Header */}
-      <header className="px-6 py-5 border-b border-sand/60">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl" aria-hidden>🌿</span>
-            <span className="font-semibold text-earth text-lg tracking-tight">
-              Local Budget Travel
-            </span>
-          </Link>
-          {city && category && (
-            <Link
-              href={`/cities/${city.slug}/${categorySlug}`}
-              className="text-sm text-earth-muted hover:text-terracotta transition-colors"
-            >
-              ← {category.name}
-            </Link>
-          )}
-        </div>
-      </header>
+      <Header />
 
       <main className="max-w-4xl mx-auto px-6 py-10 pb-24">
         {/* Breadcrumb */}
@@ -251,11 +235,7 @@ export default async function ActivityPage({
         </div>
       </main>
 
-      <footer className="px-6 py-8 text-center border-t border-sand">
-        <p className="text-earth-muted text-sm">
-          Local Budget Travel — explore more, spend less.
-        </p>
-      </footer>
+      <Footer />
     </div>
   )
 }

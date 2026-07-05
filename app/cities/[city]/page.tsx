@@ -3,6 +3,8 @@ import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import type { City, Category } from "@/lib/types";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 async function getCityBySlug(citySlug: string): Promise<City | null> {
     const { data, error } = await supabase
@@ -61,23 +63,7 @@ export default async function CityPage({
 
     return (
         <div className="min-h-screen bg-warm-white text-earth font-sans">
-          {/* Header */}
-          <header className="px-6 py-5 border-b border-sand/60">
-            <div className="max-w-4xl mx-auto flex items-center justify-between">
-              <Link href="/" className="flex items-center gap-2">
-                <span className="text-2xl" aria-hidden>&#x1F33F;</span>
-                <span className="font-semibold text-earth text-lg tracking-tight">
-                  Local Budget Travel
-                </span>
-              </Link>
-              <Link
-                href="/cities"
-                className="text-sm text-earth-muted hover:text-terracotta transition-colors"
-              >
-                ← All cities
-              </Link>
-            </div>
-          </header>
+          <Header />
 
             {/* Cover image */}
             {city.cover_image_url && (
@@ -156,12 +142,7 @@ export default async function CityPage({
               </div>
             )}
           </main>
-    
-          <footer className="px-6 py-8 text-center border-t border-sand">
-            <p className="text-earth-muted text-sm">
-              Local Budget Travel &mdash; explore more, spend less.
-            </p>
-          </footer>
+          <Footer />
         </div>
     )
 }

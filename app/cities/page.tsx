@@ -2,6 +2,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
 import type { City } from '@/lib/types'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
 
 async function getCities(): Promise<City[]> {
   const { data, error } = await supabase
@@ -31,17 +33,7 @@ export default async function CitiesPage() {
 
   return (
     <div className="min-h-screen bg-warm-white text-earth font-sans">
-      <header className="px-6 py-5 border-b border-sand/60">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl" aria-hidden>&#x1F33F;</span>
-            <span className="font-semibold text-earth text-lg tracking-tight">
-              Local Budget Travel
-            </span>
-          </Link>
-        </div>
-      </header>
-
+      <Header />
       <main className="px-6 py-12 max-w-4xl mx-auto">
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-earth mb-2">All cities</h1>
@@ -64,12 +56,7 @@ export default async function CitiesPage() {
           </div>
         )}
       </main>
-
-      <footer className="px-6 py-8 text-center border-t border-sand mt-8">
-        <p className="text-earth-muted text-sm">
-          Local Budget Travel &mdash; explore more, spend less.
-        </p>
-      </footer>
+      <Footer />
     </div>
   )
 }
