@@ -31,3 +31,13 @@ export interface Activity {
   local_tip: string
   created_at: string
 }
+
+export interface Profile {
+  id: string
+  username: string
+  bio: string | null
+  cities_lived: string[]
+  is_trusted_curator: boolean
+  avatar_url: string | null
+  created_at: string
+}
