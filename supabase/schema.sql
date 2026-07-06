@@ -40,6 +40,11 @@ create table if not exists activities (
   created_at timestamptz default now()
 );
 
+alter table activities add column if not exists submitted_by uuid references profiles(id);
+alter table activities add column if not exists origin_story text;
+alter table activities add column if not exists is_curator_pick boolean default false;
+alter table activities add column if not exists updated_at timestamptz default now();
+
 -- Profiles
 -- Public profile data linked 1:1 to Supabase Auth's auth.users.
 -- Populated automatically by the trigger below right after signup —

@@ -20,3 +20,12 @@ create policy "Public read" on profiles
 
 create policy "Users can update own profile" on profiles
   for update using (auth.uid() = id);
+
+  create policy "Users can insert own activities" on activities
+  for insert with check (auth.uid() = submitted_by);
+
+create policy "Users can update own activities" on activities
+  for update using (auth.uid() = submitted_by);
+
+create policy "Users can delete own activities" on activities
+  for delete using (auth.uid() = submitted_by);
