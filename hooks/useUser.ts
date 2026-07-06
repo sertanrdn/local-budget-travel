@@ -19,22 +19,31 @@ export function useUser() {
         .select('*')
         .eq('id', userId)
         .single()
-      if (!cancelled) setProfile(data ?? null)
+
+      if (!cancelled) {
+        setProfile(data ?? null)
+        setLoading(false)
+      }
     }
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (cancelled) return
       setUser(session?.user ?? null)
-      if (session?.user) loadProfile(session.user.id)
-      setLoading(false)
+      if (session?.user) {
+        void loadProfile(session.user.id)
+      } else {
+        setLoading(false)
+      }
     })
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
       if (session?.user) {
-        loadProfile(session.user.id)
+        setLoading(true)
+        void loadProfile(session.user.id)
       } else {
         setProfile(null)
+        setLoading(false)
       }
     })
 

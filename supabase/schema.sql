@@ -66,9 +66,15 @@ returns trigger
 language plpgsql
 security definer set search_path = public
 as $$
+declare
+  v_username text := nullif(btrim(new.raw_user_meta_data->>'username'), '');
 begin
+  if v_username is null then
+    raise exception 'Username is required to create a profile.' using errcode = '23514';
+  end if;
+
   insert into public.profiles (id, username)
-  values (new.id, new.raw_user_meta_data->>'username');
+  values (new.id, v_username);
   return new;
 end;
 $$;
@@ -77,6 +83,24 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+create or replace function public.protect_profile_privileged_columns()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+begin
+  new.id := old.id;
+  new.created_at := old.created_at;
+  new.is_trusted_curator := old.is_trusted_curator;
+  return new;
+end;
+$$;
+
+drop trigger if exists protect_profile_privileged_columns on profiles;
+create trigger protect_profile_privileged_columns
+  before update on profiles
+  for each row execute procedure public.protect_profile_privileged_columns();
 
 -- ============================================================
 -- Seed: Istanbul

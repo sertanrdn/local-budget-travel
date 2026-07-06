@@ -64,12 +64,16 @@ export function Header() {
           {!loading && (
             user ? (
               <div className="flex items-center gap-4">
-                <Link
-                  href={`/profile/${profile?.username ?? ''}`}
-                  className="text-sm font-medium text-earth-muted hover:text-terracotta transition-colors"
-                >
-                  {profile?.username ?? 'Profile'}
-                </Link>
+                {profile?.username ? (
+                  <Link
+                    href={`/profile/${profile.username}`}
+                    className="text-sm font-medium text-earth-muted hover:text-terracotta transition-colors"
+                  >
+                    {profile.username}
+                  </Link>
+                ) : (
+                  <span className="text-sm font-medium text-earth-muted">Profile</span>
+                )}
                 <button
                   onClick={handleLogout}
                   className="text-sm font-medium text-earth-muted hover:text-terracotta transition-colors"
@@ -135,13 +139,17 @@ export function Header() {
             {!loading && (
               user ? (
                 <>
-                  <Link
-                    href={`/profile/${profile?.username ?? ''}`}
-                    onClick={() => setIsOpen(false)}
-                    className="text-sm font-medium px-2 py-2.5 rounded-lg text-earth-muted hover:bg-sand/40 transition-colors"
-                  >
-                    {profile?.username ?? 'Profile'}
-                  </Link>
+                  {profile?.username ? (
+                    <Link
+                      href={`/profile/${profile.username}`}
+                      onClick={() => setIsOpen(false)}
+                      className="text-sm font-medium text-earth-muted hover:text-terracotta transition-colors"
+                    >
+                      {profile.username}
+                    </Link>
+                  ) : (
+                    <span className="text-sm font-medium text-earth-muted">Profile</span>
+                  )}
                   <button
                     onClick={handleLogout}
                     className="text-sm font-medium px-2 py-2.5 rounded-lg text-earth-muted hover:bg-sand/40 transition-colors text-left"
