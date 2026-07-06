@@ -40,6 +40,39 @@ create table if not exists activities (
   created_at timestamptz default now()
 );
 
+-- Profiles
+-- Public profile data linked 1:1 to Supabase Auth's auth.users.
+-- Populated automatically by the trigger below right after signup —
+-- no manual insert needed from the app.
+create table if not exists profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  username text unique not null,
+  bio text,
+  cities_lived uuid[] default '{}',
+  is_trusted_curator boolean default false,
+  avatar_url text,
+  created_at timestamptz default now()
+);
+
+-- Auto-create a profile row whenever someone signs up.
+-- Reads the "username" passed in supabase.auth.signUp({ options: { data: { username } } }).
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+begin
+  insert into public.profiles (id, username)
+  values (new.id, new.raw_user_meta_data->>'username');
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
 -- ============================================================
 -- Seed: Istanbul
 -- ============================================================
