@@ -40,11 +40,6 @@ create table if not exists activities (
   created_at timestamptz default now()
 );
 
-alter table activities add column if not exists submitted_by uuid references profiles(id);
-alter table activities add column if not exists origin_story text;
-alter table activities add column if not exists is_curator_pick boolean default false;
-alter table activities add column if not exists updated_at timestamptz default now();
-
 -- Profiles
 -- Public profile data linked 1:1 to Supabase Auth's auth.users.
 -- Populated automatically by the trigger below right after signup —
@@ -92,7 +87,10 @@ as $$
 begin
   new.id := old.id;
   new.created_at := old.created_at;
-  new.is_trusted_curator := old.is_trusted_curator;
+
+  if auth.uid() is not null then
+    new.is_trusted_curator := old.is_trusted_curator;
+  end if;
   return new;
 end;
 $$;
@@ -101,6 +99,11 @@ drop trigger if exists protect_profile_privileged_columns on profiles;
 create trigger protect_profile_privileged_columns
   before update on profiles
   for each row execute procedure public.protect_profile_privileged_columns();
+
+alter table activities add column if not exists submitted_by uuid references profiles(id);
+alter table activities add column if not exists origin_story text;
+alter table activities add column if not exists is_curator_pick boolean default false;
+alter table activities add column if not exists updated_at timestamptz default now();
 
 -- ============================================================
 -- Seed: Istanbul

@@ -75,6 +75,7 @@ export function Header() {
                   <span className="text-sm font-medium text-earth-muted">Profile</span>
                 )}
                 <button
+                  type="button"
                   onClick={handleLogout}
                   className="text-sm font-medium text-earth-muted hover:text-terracotta transition-colors"
                 >
@@ -151,6 +152,7 @@ export function Header() {
                     <span className="text-sm font-medium text-earth-muted">Profile</span>
                   )}
                   <button
+                    type="button"
                     onClick={handleLogout}
                     className="text-sm font-medium px-2 py-2.5 rounded-lg text-earth-muted hover:bg-sand/40 transition-colors text-left"
                   >
@@ -162,7 +164,7 @@ export function Header() {
                   <Link
                     href="/auth/login"
                     onClick={() => setIsOpen(false)}
-                    className='text-sm font-medium px-2 py-2.5 rounded-lg text-earth-muted hover:bg-sand/40 transition-colors'
+                    className="text-sm font-medium px-2 py-2.5 rounded-lg text-earth-muted hover:bg-sand/40 transition-colors"
                   >
                     Log in
                   </Link>

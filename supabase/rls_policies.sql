@@ -21,11 +21,16 @@ create policy "Public read" on profiles
 create policy "Users can update own profile" on profiles
   for update using (auth.uid() = id) with check (auth.uid() = id);
 
-  create policy "Users can insert own activities" on activities
+alter table activities enable row level security;
+
+drop policy if exists "Users can insert own activities" on activities;
+create policy "Users can insert own activities" on activities
   for insert with check (auth.uid() = submitted_by);
 
+drop policy if exists "Users can update own activities" on activities;
 create policy "Users can update own activities" on activities
-  for update using (auth.uid() = submitted_by);
+  for update using (auth.uid() = submitted_by) with check (auth.uid() = submitted_by);
 
+drop policy if exists "Users can delete own activities" on activities;
 create policy "Users can delete own activities" on activities
   for delete using (auth.uid() = submitted_by);

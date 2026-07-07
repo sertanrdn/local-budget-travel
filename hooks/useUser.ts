@@ -14,16 +14,17 @@ export function useUser() {
     let cancelled = false
 
     async function loadProfile(userId: string) {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
-
-      if (!cancelled) {
-        setProfile(data ?? null)
-        setLoading(false)
-      }
+        const { data } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .single()
+      
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!cancelled && session?.user?.id === userId) {
+          setProfile(data ?? null)
+          setLoading(false)
+        }
     }
 
     supabase.auth.getSession().then(({ data: { session } }) => {
