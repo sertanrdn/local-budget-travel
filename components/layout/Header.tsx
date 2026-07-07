@@ -1,8 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { supabase } from '@/lib/supabase'
+import { useUser } from '@/hooks/useUser'
 
 const NAV_LINKS = [
   { href: '/cities', label: 'Cities' },
@@ -12,7 +14,16 @@ const NAV_LINKS = [
 
 export function Header() {
   const pathname = usePathname()
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
+  const { user, profile, loading } = useUser()
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    setIsOpen(false)
+    router.push('/')
+    router.refresh()
+  }
 
   return (
     <header className="px-6 py-5 border-b border-sand/60 relative">
@@ -49,6 +60,45 @@ export function Header() {
               </Link>
             )
           })}
+
+          {!loading && (
+            user ? (
+              <div className="flex items-center gap-4">
+                {profile?.username ? (
+                  <Link
+                    href={`/profile/${profile.username}`}
+                    className="text-sm font-medium text-earth-muted hover:text-terracotta transition-colors"
+                  >
+                    {profile.username}
+                  </Link>
+                ) : (
+                  <span className="text-sm font-medium text-earth-muted">Profile</span>
+                )}
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="text-sm font-medium text-earth-muted hover:text-terracotta transition-colors"
+                >
+                  Log out
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/auth/login"
+                  className="text-sm font-medium text-earth-muted hover:text-terracotta transition-colors"
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/auth/signup"
+                  className="bg-terracotta text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-terracotta-dark transition-colors"
+                >
+                  Sign up
+                </Link>
+              </div>
+            )
+          )}
         </nav>
 
         {/* Mobile menu toggle */}
@@ -86,6 +136,49 @@ export function Header() {
               </Link>
             )
           })}
+          <div className="mt-2 pt-2 border-t border-sand/60 flex flex-col gap-1">
+            {!loading && (
+              user ? (
+                <>
+                  {profile?.username ? (
+                    <Link
+                      href={`/profile/${profile.username}`}
+                      onClick={() => setIsOpen(false)}
+                      className="text-sm font-medium text-earth-muted hover:text-terracotta transition-colors"
+                    >
+                      {profile.username}
+                    </Link>
+                  ) : (
+                    <span className="text-sm font-medium text-earth-muted">Profile</span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="text-sm font-medium px-2 py-2.5 rounded-lg text-earth-muted hover:bg-sand/40 transition-colors text-left"
+                  >
+                    Log out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/auth/login"
+                    onClick={() => setIsOpen(false)}
+                    className="text-sm font-medium px-2 py-2.5 rounded-lg text-earth-muted hover:bg-sand/40 transition-colors"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/auth/signup"
+                    onClick={() => setIsOpen(false)}
+                    className="text-sm font-medium px-2 py-2.5 rounded-lg text-terracotta hover:bg-terracotta/10 transition-colors"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )
+            )}
+          </div>
         </nav>
       )}
     </header>

@@ -40,6 +40,71 @@ create table if not exists activities (
   created_at timestamptz default now()
 );
 
+-- Profiles
+-- Public profile data linked 1:1 to Supabase Auth's auth.users.
+-- Populated automatically by the trigger below right after signup —
+-- no manual insert needed from the app.
+create table if not exists profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  username text unique not null,
+  bio text,
+  cities_lived uuid[] default '{}',
+  is_trusted_curator boolean default false,
+  avatar_url text,
+  created_at timestamptz default now()
+);
+
+-- Auto-create a profile row whenever someone signs up.
+-- Reads the "username" passed in supabase.auth.signUp({ options: { data: { username } } }).
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+declare
+  v_username text := nullif(btrim(new.raw_user_meta_data->>'username'), '');
+begin
+  if v_username is null then
+    raise exception 'Username is required to create a profile.' using errcode = '23514';
+  end if;
+
+  insert into public.profiles (id, username)
+  values (new.id, v_username);
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
+create or replace function public.protect_profile_privileged_columns()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+begin
+  new.id := old.id;
+  new.created_at := old.created_at;
+
+  if auth.uid() is not null then
+    new.is_trusted_curator := old.is_trusted_curator;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists protect_profile_privileged_columns on profiles;
+create trigger protect_profile_privileged_columns
+  before update on profiles
+  for each row execute procedure public.protect_profile_privileged_columns();
+
+alter table activities add column if not exists submitted_by uuid references profiles(id);
+alter table activities add column if not exists origin_story text;
+alter table activities add column if not exists is_curator_pick boolean default false;
+alter table activities add column if not exists updated_at timestamptz default now();
+
 -- ============================================================
 -- Seed: Istanbul
 -- ============================================================
