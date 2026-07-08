@@ -1,4 +1,9 @@
 export function isWikimediaUrl(url: string | null | undefined): boolean {
     if (!url) return false
-    return url.includes('upload.wikimedia.org')
+    try {
+        const { hostname } = new URL(url, 'https://example.com')
+        return hostname === 'upload.wikimedia.org'
+    } catch {
+        return false
+    }
 }
