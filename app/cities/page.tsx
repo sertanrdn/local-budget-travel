@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import type { City } from '@/lib/types'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { isWikimediaUrl } from '@/lib/isWikimediaUrl'
 
 async function getCities(): Promise<City[]> {
   const { data, error } = await supabase
@@ -81,6 +82,7 @@ function CityCard({
               src={city.cover_image_url}
               alt={city.name}
               fill
+              unoptimized={isWikimediaUrl(city.cover_image_url)}
               className="object-cover"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               loading="eager"

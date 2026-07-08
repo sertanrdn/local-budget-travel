@@ -6,6 +6,7 @@ import type { Activity, Category, City } from '@/lib/types'
 import { ActivityMap } from '@/components/maps/ActivityMap'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { isWikimediaUrl } from '@/lib/isWikimediaUrl'
 
 async function getActivity(id: string): Promise<Activity | null> {
   const { data, error } = await supabase
@@ -126,6 +127,7 @@ export default async function ActivityPage({
                   src={activity.photo_url}
                   alt={activity.title}
                   fill
+                  unoptimized={isWikimediaUrl(activity.photo_url)}
                   className="object-cover"
                   priority
                   sizes="(max-width: 1024px) 100vw, 60vw"
