@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Activity } from '@/lib/types'
+import { isWikimediaUrl } from '@/lib/isWikimediaUrl'
 
 interface ActivityCardProps {
   activity: Activity
@@ -17,6 +18,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
               src={activity.photo_url}
               alt={activity.title}
               fill
+              unoptimized={isWikimediaUrl(activity.photo_url)}
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 640px) 100vw, 192px"
             />
