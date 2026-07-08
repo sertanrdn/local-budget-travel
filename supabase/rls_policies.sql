@@ -34,3 +34,36 @@ create policy "Users can update own activities" on activities
 drop policy if exists "Users can delete own activities" on activities;
 create policy "Users can delete own activities" on activities
   for delete using (auth.uid() = submitted_by);
+
+-- Anyone can view avatars (bucket is public, but SELECT policy is still required for direct table access)
+create policy "Public read access for avatars"
+on storage.objects for select
+using (bucket_id = 'avatars');
+
+-- A user can only upload into their own folder: avatars/{their_user_id}/...
+create policy "Users can upload their own avatar"
+on storage.objects for insert
+with check (
+  bucket_id = 'avatars'
+  and auth.uid()::text = (storage.foldername(name))[1]
+);
+
+-- A user can only update files in their own folder
+create policy "Users can update their own avatar"
+on storage.objects for update
+using (
+  bucket_id = 'avatars'
+  and auth.uid()::text = (storage.foldername(name))[1]
+)
+with check (
+  bucket_id = 'avatars'
+  and auth.uid()::text = (storage.foldername(name))[1]
+);
+
+-- A user can only delete files in their own folder
+create policy "Users can delete their own avatar"
+on storage.objects for delete
+using (
+  bucket_id = 'avatars'
+  and auth.uid()::text = (storage.foldername(name))[1]
+);
