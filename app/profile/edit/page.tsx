@@ -186,6 +186,9 @@ function EditProfileForm({
 
       setSuccess(true)
       router.refresh()
+      setTimeout(() => {
+        router.push(`/profile/${profile?.username}`);
+      }, 1500);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.')
     } finally {
