@@ -5,6 +5,7 @@ import type { Activity, City, Profile } from '@/lib/types'
 import { ActivityCard } from '@/components/ui/ActivityCard'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { EditProfileButton } from '@/components/ui/EditProfileButton'
 
 async function getProfileByUsername(username: string): Promise<Profile | null> {
   const { data, error } = await supabase
@@ -106,6 +107,10 @@ export default async function ProfilePage({
                 No bio yet.
               </p>
             )}
+
+            <div className="mt-3">
+              <EditProfileButton profileId={profile.id} />
+            </div>
 
             {citiesLived.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-4">
