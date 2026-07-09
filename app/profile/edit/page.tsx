@@ -3,11 +3,11 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import type { User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { useUser } from '@/hooks/useUser'
 import { uploadAvatar } from '@/lib/uploadAvatar'
 import type { City, Profile } from '@/lib/types'
-import type { User } from '@supabase/supabase-js'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 
@@ -25,15 +25,50 @@ async function getAllCities(): Promise<City[]> {
 
 export default function EditProfilePage() {
   const router = useRouter()
-  const { user, profile, loading: userLoading } = useUser()
+  const { profile } = useUser() // still used for profile data (bio, avatar, cities_lived)
+
+  // undefined = auth not checked yet, null = confirmed signed out,
+  // User = confirmed signed in. Only ever set from real callbacks below.
+  const [authedUser, setAuthedUser] = useState<User | null | undefined>(undefined)
 
   useEffect(() => {
-    if (!userLoading && !user) {
+    let cancelled = false
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (cancelled) return
+      setAuthedUser(session?.user ?? null)
+    })
+
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      // Only react to genuine sign-in/out. Deliberately ignore
+      // TOKEN_REFRESHED and other background events Supabase fires when
+      // the tab regains focus — reacting to those would unmount the
+      // form below and wipe whatever the user was typing.
+      if (event === 'SIGNED_OUT') {
+        setAuthedUser(null)
+      } else if (event === 'SIGNED_IN' && session?.user) {
+        setAuthedUser(session.user)
+      }
+    })
+
+    return () => {
+      cancelled = true
+      listener.subscription.unsubscribe()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (authedUser === null) {
       router.push('/auth/login')
     }
-  }, [userLoading, user, router])
+  }, [authedUser, router])
 
-  if (userLoading || !user) {
+  // Wait for BOTH: a confirmed user, AND the matching profile row to
+  // have actually loaded — not just "authed", since profile arrives
+  // from a separate async fetch and can lag behind authedUser.
+  const profileReady = profile !== null && authedUser != null && profile.id === authedUser.id
+
+  if (authedUser === undefined || authedUser === null || !profileReady) {
     return (
       <div className="min-h-screen bg-warm-white text-earth font-sans flex flex-col">
         <Header />
@@ -55,9 +90,9 @@ export default function EditProfilePage() {
         <h1 className="text-3xl font-bold text-earth leading-tight mb-8">
           Edit profile
         </h1>
-        {/* key forces a fresh mount once profile has actually loaded,
-            so EditProfileForm's useState can read it directly */}
-        <EditProfileForm key={profile?.id ?? 'new'} user={user} profile={profile} />
+        {/* key=authedUser.id: remounts only if a different user signs
+            in, never on background token refreshes */}
+        <EditProfileForm key={profile.id} user={authedUser} profile={profile} />
       </main>
       <Footer />
     </div>
