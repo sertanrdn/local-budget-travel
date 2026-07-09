@@ -54,5 +54,14 @@ export function useUser() {
     }
   }, [])
 
+  useEffect(() => {
+    function handleProfileUpdated(e: Event) {
+      const custom = e as CustomEvent<Profile>
+      setProfile(custom.detail)
+    }
+    window.addEventListener('profile:updated', handleProfileUpdated)
+    return () => window.removeEventListener('profile:updated', handleProfileUpdated)
+  }, [])
+
   return { user, profile, loading }
 }
