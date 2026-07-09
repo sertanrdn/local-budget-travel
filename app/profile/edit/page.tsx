@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, useRef, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import type { User } from '@supabase/supabase-js'
@@ -113,10 +113,12 @@ function EditProfileForm({
   const [citiesLived, setCitiesLived] = useState<string[]>(profile?.cities_lived ?? [])
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+  const [removeAvatar, setRemoveAvatar] = useState(false)
 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     void getAllCities().then(setCities)
@@ -127,6 +129,13 @@ function EditProfileForm({
     if (!file) return
     setAvatarFile(file)
     setAvatarPreview(URL.createObjectURL(file))
+    setRemoveAvatar(false) // picking a new file cancels any pending removal
+  }
+
+  function handleRemoveAvatar() {
+    setAvatarFile(null)
+    setAvatarPreview(null)
+    setRemoveAvatar(true)
   }
 
   function toggleCity(cityId: string) {
@@ -148,6 +157,8 @@ function EditProfileForm({
 
       if (avatarFile) {
         avatarUrl = await uploadAvatar(user.id, avatarFile)
+      } else if (removeAvatar) {
+        avatarUrl = null
       }
 
       const { error: updateError } = await supabase
@@ -170,7 +181,7 @@ function EditProfileForm({
     }
   }
 
-  const displayAvatar = avatarPreview ?? profile?.avatar_url ?? null
+  const displayAvatar = removeAvatar ? null: avatarPreview ?? profile?.avatar_url ?? null
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -189,15 +200,35 @@ function EditProfileForm({
             <span aria-hidden>&#x1F464;</span>
           )}
         </div>
-        <label className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5">
           <span className="text-sm font-medium text-earth">Avatar</span>
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            onChange={handleAvatarChange}
-            className="text-sm text-earth-muted file:mr-3 file:py-2 file:px-3 file:rounded-full file:border-0 file:bg-sand/50 file:text-earth file:text-xs file:font-medium hover:file:bg-sand/70"
-          />
-        </label>
+          <div className="flex items-center gap-3">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleAvatarChange}
+              className="hidden"
+              aria-label="Upload avatar image"
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="text-xs font-medium text-earth bg-sand/50 hover:bg-sand/70 px-3 py-2 rounded-full transition-colors"
+            >
+              {avatarFile ? "Change photo" : "Choose photo"}
+            </button>
+            {displayAvatar && (
+              <button
+                type="button"
+                onClick={handleRemoveAvatar}
+                className="text-xs font-medium text-terracotta hover:text-terracotta-dark transition-colors"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Bio */}
@@ -219,7 +250,7 @@ function EditProfileForm({
         </span>
         <div className="flex flex-wrap gap-2">
           {cities.map((city) => {
-            const selected = citiesLived.includes(city.id)
+            const selected = citiesLived.includes(city.id);
             return (
               <button
                 key={city.id}
@@ -227,13 +258,13 @@ function EditProfileForm({
                 onClick={() => toggleCity(city.id)}
                 className={`text-sm font-medium px-3.5 py-2 rounded-full border transition-colors ${
                   selected
-                    ? 'bg-terracotta text-white border-terracotta'
-                    : 'bg-white text-earth-muted border-sand hover:border-terracotta/40'
+                    ? "bg-terracotta text-white border-terracotta"
+                    : "bg-white text-earth-muted border-sand hover:border-terracotta/40"
                 }`}
               >
                 {city.name}
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -254,8 +285,8 @@ function EditProfileForm({
         disabled={saving}
         className="bg-terracotta text-white px-6 py-3 rounded-full font-medium hover:bg-terracotta-dark transition-colors disabled:opacity-50"
       >
-        {saving ? 'Saving…' : 'Save changes'}
+        {saving ? "Saving…" : "Save changes"}
       </button>
     </form>
-  )
+  );
 }
