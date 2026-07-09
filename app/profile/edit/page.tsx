@@ -10,6 +10,7 @@ import { uploadAvatar } from '@/lib/uploadAvatar'
 import type { City, Profile } from '@/lib/types'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import Link from 'next/link'
 
 const inputClass =
   'w-full px-4 py-3 rounded-xl border border-sand bg-white text-earth placeholder:text-earth-muted/50 focus:outline-none focus:border-terracotta text-sm transition-colors'
@@ -172,6 +173,17 @@ function EditProfileForm({
 
       if (updateError) throw new Error(updateError.message)
 
+      window.dispatchEvent(
+        new CustomEvent("profile:updated", {
+          detail: {
+            ...profile,
+            bio: bio.trim() || null,
+            cities_lived: citiesLived,
+            avatar_url: avatarUrl,
+          },
+        })
+      );
+
       setSuccess(true)
       router.refresh()
     } catch (err) {
@@ -279,14 +291,21 @@ function EditProfileForm({
           Profile updated.
         </p>
       )}
-
-      <button
-        type="submit"
-        disabled={saving}
-        className="bg-terracotta text-white px-6 py-3 rounded-full font-medium hover:bg-terracotta-dark transition-colors disabled:opacity-50"
-      >
-        {saving ? "Saving…" : "Save changes"}
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          type="submit"
+          disabled={saving}
+          className="bg-terracotta text-white px-6 py-3 rounded-full font-medium hover:bg-terracotta-dark transition-colors disabled:opacity-50"
+        >
+          {saving ? "Saving…" : "Save changes"}
+        </button>
+        <Link
+          href={`/profile/${profile?.username}`}
+          className="text-sm font-medium text-earth-muted hover:text-terracotta transition-colors px-4 py-3"
+        >
+          Cancel
+        </Link>
+      </div>
     </form>
   );
 }
