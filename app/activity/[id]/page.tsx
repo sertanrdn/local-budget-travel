@@ -158,6 +158,17 @@ export default async function ActivityPage({
                 </p>
               </div>
             )}
+            {/* Origin story — the personal "I found this while..." bit */}
+            {activity.origin_story && (
+              <div>
+                <h2 className="text-xs font-semibold text-earth-muted uppercase tracking-widest mb-3">
+                  How I found this
+                </h2>
+                <p className="text-earth leading-relaxed text-base italic">
+                  {activity.origin_story}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Right: map + cost info */}
