@@ -6,7 +6,7 @@ import Image from "next/image";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import { useUser } from "@/hooks/useUser";
-import { geocodeLocation } from "@/lib/geocode";
+import { searchLocations, type GeocodeResult } from "@/lib/geocode";
 import { uploadActivityPhoto } from "@/lib/uploadActivityPhoto";
 import type { City, Category } from "@/lib/types";
 import { Header } from "@/components/layout/Header";
@@ -146,9 +146,13 @@ function SubmitActivityForm({
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [geocoding, setGeocoding] = useState(false);
-  const [geocodeMessage, setGeocodeMessage] = useState<string | null>(null);
-  const [geocodeError, setGeocodeError] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<GeocodeResult[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchingAddress, setSearchingAddress] = useState(false);
+  const [locationConfirmed, setLocationConfirmed] = useState(false);
+  const [showManualCoords, setShowManualCoords] = useState(false);
+  const addressWrapperRef = useRef<HTMLDivElement>(null);
+  const skipNextSearchRef = useRef(false);
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -189,30 +193,52 @@ function SubmitActivityForm({
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
-  async function handleFindOnMap() {
-    if (!address.trim()) {
-      setGeocodeError("Enter an address or place name first.");
-      return;
-    }
-    setGeocoding(true);
-    setGeocodeError(null);
-    setGeocodeMessage(null);
-
-    const query = selectedCity ? `${address}, ${selectedCity.name}` : address;
-    const result = await geocodeLocation(query);
-
-    setGeocoding(false);
-
-    if (!result) {
-      setGeocodeError(
-        "Couldn't find that location — try a more specific address, or enter coordinates manually."
-      );
+  // Debounced live search as the user types — waits 400ms after the
+  // last keystroke before hitting Nominatim, so we don't fire a
+  // request per character. The effect now only ever does the actual
+  // async fetch, inside the setTimeout/.then callbacks — no
+  // synchronous setState directly in the effect body.
+  useEffect(() => {
+    if (skipNextSearchRef.current) {
+      skipNextSearchRef.current = false;
       return;
     }
 
+    const trimmed = address.trim();
+    if (trimmed.length < 3) return;
+
+    const timeoutId = setTimeout(() => {
+      setSearchingAddress(true);
+      const query = selectedCity ? `${trimmed}, ${selectedCity.name}` : trimmed;
+      void searchLocations(query).then((results) => {
+        setSuggestions(results);
+        setShowSuggestions(results.length > 0);
+        setSearchingAddress(false);
+      });
+    }, 400);
+
+    return () => clearTimeout(timeoutId);
+  }, [address, selectedCity]);
+
+  useEffect(() => {
+    if (!showSuggestions) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (addressWrapperRef.current && !addressWrapperRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showSuggestions]);
+
+  function handleSelectSuggestion(result: GeocodeResult) {
+    skipNextSearchRef.current = true;
+    setAddress(result.displayName);
     setLatitude(result.latitude.toFixed(6));
     setLongitude(result.longitude.toFixed(6));
-    setGeocodeMessage(`Found: ${result.displayName}`);
+    setLocationConfirmed(true);
+    setShowSuggestions(false);
+    setSuggestions([]);
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -353,63 +379,96 @@ function SubmitActivityForm({
         />
       </label>
 
-      {/* Address + geocode */}
-      <div className="flex flex-col gap-1.5">
+      {/* Address — live autocomplete via Nominatim. Selecting a
+          suggestion fills the address and sets lat/lng silently in
+          the background — no separate "find on map" step. */}
+      <div className="flex flex-col gap-1.5 relative" ref={addressWrapperRef}>
         <span className="text-sm font-medium text-earth">Address</span>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => {
-              setAddress(e.target.value);
-              setGeocodeMessage(null);
-              setGeocodeError(null);
-            }}
-            placeholder="Street, neighbourhood, or landmark name"
-            className={inputClass}
-          />
-          <button
-            type="button"
-            onClick={handleFindOnMap}
-            disabled={geocoding}
-            className="shrink-0 bg-sand/50 hover:bg-sand/70 text-earth text-sm font-medium px-4 rounded-xl transition-colors disabled:opacity-50"
-          >
-            {geocoding ? "Finding…" : "Find on map"}
-          </button>
-        </div>
-        {geocodeMessage && (
-          <span className="text-xs text-olive">{geocodeMessage}</span>
+        <input
+          type="text"
+          value={address}
+          onChange={(e) => {
+            setAddress(e.target.value);
+            setLocationConfirmed(true);
+          }}
+          onFocus={() => {
+            if (suggestions.length > 0) setShowSuggestions(true);
+          }}
+          placeholder="Start typing a place name or address…"
+          autoComplete="off"
+          className={inputClass}
+        />
+
+        {showSuggestions && suggestions.length > 0 && address.trim().length >= 3 && (
+          <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl border border-sand shadow-lg overflow-hidden z-10">
+            {suggestions.map((result, i) => (
+              <button
+                key={`${result.latitude}-${result.longitude}-${i}`}
+                type="button"
+                onClick={() => handleSelectSuggestion(result)}
+                className="w-full text-left px-4 py-2.5 text-sm text-earth hover:bg-sand/40 transition-colors border-b border-sand/40 last:border-b-0"
+              >
+                {result.displayName}
+              </button>
+            ))}
+          </div>
         )}
-        {geocodeError && (
-          <span className="text-xs text-terracotta">{geocodeError}</span>
+
+        {searchingAddress && (
+          <span className="text-xs text-earth-muted">Searching…</span>
         )}
+        {!searchingAddress && locationConfirmed && (
+          <span className="text-xs text-olive">✓ Location set</span>
+        )}
+        {!searchingAddress &&
+          !locationConfirmed &&
+          address.trim().length >= 3 &&
+          suggestions.length === 0 && (
+            <span className="text-xs text-earth-muted">
+              No matches found — keep typing, or enter coordinates below.
+            </span>
+          )}
+
+        <button
+          type="button"
+          onClick={() => setShowManualCoords((v) => !v)}
+          className="text-xs text-earth-muted underline hover:text-terracotta transition-colors self-start mt-1"
+        >
+          {showManualCoords
+            ? "Hide manual coordinates"
+            : "Coordinates not quite right? Enter them manually"}
+        </button>
       </div>
 
-      {/* Lat/lng — filled by geocode, editable manually */}
-      <div className="grid grid-cols-2 gap-3">
-        <label className="flex flex-col gap-1.5">
-          <span className="text-sm font-medium text-earth">Latitude</span>
-          <input
-            type="number"
-            step="any"
-            value={latitude}
-            onChange={(e) => setLatitude(e.target.value)}
-            placeholder="41.0136"
-            className={inputClass}
-          />
-        </label>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-sm font-medium text-earth">Longitude</span>
-          <input
-            type="number"
-            step="any"
-            value={longitude}
-            onChange={(e) => setLongitude(e.target.value)}
-            placeholder="28.9550"
-            className={inputClass}
-          />
-        </label>
-      </div>
+      {/* Lat/lng — set automatically when a suggestion is picked;
+          hidden by default since most people don't know their own
+          coordinates, but always available as a manual override */}
+      {showManualCoords && (
+        <div className="grid grid-cols-2 gap-3">
+          <label className="flex flex-col gap-1.5">
+            <span className="text-sm font-medium text-earth">Latitude</span>
+            <input
+              type="number"
+              step="any"
+              value={latitude}
+              onChange={(e) => setLatitude(e.target.value)}
+              placeholder="41.0136"
+              className={inputClass}
+            />
+          </label>
+          <label className="flex flex-col gap-1.5">
+            <span className="text-sm font-medium text-earth">Longitude</span>
+            <input
+              type="number"
+              step="any"
+              value={longitude}
+              onChange={(e) => setLongitude(e.target.value)}
+              placeholder="28.9550"
+              className={inputClass}
+            />
+          </label>
+        </div>
+      )}
 
       {/* Photo */}
       <div className="flex flex-col gap-1.5">
@@ -425,7 +484,21 @@ function SubmitActivityForm({
                 unoptimized
               />
             ) : (
-              <span aria-hidden>📍</span>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+                className="text-earth-muted/50"
+              >
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
             )}
           </div>
           <div className="flex items-center gap-3">

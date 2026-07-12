@@ -4,42 +4,64 @@ export interface GeocodeResult {
   displayName: string;
 }
 
+interface NominatimResult {
+    lat: string
+    lon: string
+    display_name: string
+}
+
 /**
- * Look up a place name (e.g. "Westerpark, Amsterdam") and return its
- * coordinates via OpenStreetMap's free Nominatim API. Returns null if
- * nothing was found or the request failed.
+ * Search OpenStreetMap's free Nominatim API for place names or addresses
+ * matching the query, returning up to `limit` candidates for the user to
+ * pick from. Used to power live-as-you-type address suggestions.
  *
- * Note: Nominatim's usage policy asks for at most 1 request/second and
- * a way to identify the calling app. Browsers can't set a custom
+ * Note: Nominatim's usage policy asks for at most 1 request/second and a
+ * way to identify the calling app. Browsers can't set a custom
  * User-Agent header, but they do send Referer automatically, which
- * Nominatim accepts as identification for client-side use.
+ * Nominatim accepts as identification for client-side use. Callers are
+ * expected to debounce keystrokes before calling this — this function
+ * itself does not rate-limit.
  */
-export async function geocodeLocation(
-  query: string
-): Promise<GeocodeResult | null> {
+
+export async function searchLocations(
+  query: string,
+  limit = 5
+): Promise<GeocodeResult[]> {
   const trimmed = query.trim();
-  if (!trimmed) return null;
+  if (!trimmed) return [];
 
   const url = new URL("https://nominatim.openstreetmap.org/search");
   url.searchParams.set("q", trimmed);
   url.searchParams.set("format", "json");
-  url.searchParams.set("limit", "1");
+  url.searchParams.set("limit", String(limit));
 
   try {
     const res = await fetch(url.toString());
-    if (!res.ok) return null;
+    if (!res.ok) return [];
 
-    const results = await res.json();
-    if (!Array.isArray(results) || results.length === 0) return null;
+    const results: NominatimResult[] = await res.json();
+    if (!Array.isArray(results)) return [];
 
-    const { lat, lon, display_name } = results[0];
-    const latitude = parseFloat(lat);
-    const longitude = parseFloat(lon);
-
-    if (Number.isNaN(latitude) || Number.isNaN(longitude)) return null;
-
-    return { latitude, longitude, displayName: display_name };
+    return results
+      .map((r) => ({
+        latitude: parseFloat(r.lat),
+        longitude: parseFloat(r.lon),
+        displayName: r.display_name,
+      }))
+      .filter((r) => !Number.isNaN(r.latitude) && !Number.isNaN(r.longitude));
   } catch {
-    return null;
+    return [];
   }
+}
+
+/**
+ * Look up a single best match for a place name/address. Thin wrapper
+ * around searchLocations for callers that just want one result rather
+ * than a list of suggestions.
+ */
+export async function geocodeLocation(
+  query: string
+): Promise<GeocodeResult | null> {
+  const results = await searchLocations(query, 1);
+  return results[0] ?? null;
 }
