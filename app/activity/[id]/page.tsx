@@ -7,6 +7,7 @@ import { ActivityMap } from '@/components/maps/ActivityMap'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { isWikimediaUrl } from '@/lib/isWikimediaUrl'
+import { getShortAddress } from '@/lib/formatAddress'
 
 async function getActivity(id: string): Promise<Activity | null> {
   const { data, error } = await supabase
@@ -115,7 +116,7 @@ export default async function ActivityPage({
               {activity.address && (
                 <p className="text-earth-muted/70 text-sm mt-2 flex items-center gap-1.5">
                   <span aria-hidden>📍</span>
-                  {activity.address}
+                  {getShortAddress(activity.address)}
                 </p>
               )}
             </div>

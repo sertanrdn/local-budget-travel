@@ -233,7 +233,6 @@ function SubmitActivityForm({
 
   function handleSelectSuggestion(result: GeocodeResult) {
     skipNextSearchRef.current = true;
-    setAddress(result.displayName);
     setLatitude(result.latitude.toFixed(6));
     setLongitude(result.longitude.toFixed(6));
     setLocationConfirmed(true);
