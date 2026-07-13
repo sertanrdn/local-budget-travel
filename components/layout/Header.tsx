@@ -123,6 +123,14 @@ export function Header() {
                         Profile
                       </Link>
                     )}
+                    <Link
+                      href="/activity/submit"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-earth hover:bg-sand/40 transition-colors"
+                    >
+                      <PlusCircleIcon />
+                        Submit Activity
+                    </Link>
                     <button
                       type="button"
                       onClick={handleLogout}
@@ -201,6 +209,14 @@ export function Header() {
                       {profile.username}
                     </Link>
                   )}
+                  <Link
+                    href="/activity/submit"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-earth hover:bg-sand/40 transition-colors"
+                  >
+                    <PlusCircleIcon />
+                      Submit Activity
+                  </Link>
                   <button
                     type="button"
                     onClick={handleLogout}
@@ -270,6 +286,16 @@ function UserIcon() {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
+    </svg>
+  )
+}
+
+function PlusCircleIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="16" />
+      <line x1="8" y1="12" x2="16" y2="12" />
     </svg>
   )
 }

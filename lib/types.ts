@@ -29,7 +29,11 @@ export interface Activity {
   is_free: boolean
   estimated_cost: string
   local_tip: string
+  submitted_by: string | null
+  origin_story: string | null
+  is_curator_pick: boolean
   created_at: string
+  updated_at: string
 }
 
 export interface Profile {

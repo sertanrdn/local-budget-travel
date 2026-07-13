@@ -7,6 +7,8 @@ import { ActivityMap } from '@/components/maps/ActivityMap'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { isWikimediaUrl } from '@/lib/isWikimediaUrl'
+import { getShortAddress } from '@/lib/formatAddress'
+import { ActivityActions } from '@/components/activity/ActivityActions'
 
 async function getActivity(id: string): Promise<Activity | null> {
   const { data, error } = await supabase
@@ -109,13 +111,16 @@ export default async function ActivityPage({
                   {activity.is_free ? '✓ Free' : activity.estimated_cost || 'Paid'}
                 </span>
               </div>
-              <h1 className="text-3xl font-bold text-earth leading-tight">
-                {activity.title}
-              </h1>
+              <div className="flex items-start justify-between gap-3">
+                <h1 className="text-3xl font-bold text-earth leading-tight">
+                  {activity.title}
+                </h1>
+                <ActivityActions activity={activity} />
+              </div>
               {activity.address && (
                 <p className="text-earth-muted/70 text-sm mt-2 flex items-center gap-1.5">
                   <span aria-hidden>📍</span>
-                  {activity.address}
+                  {getShortAddress(activity.address)}
                 </p>
               )}
             </div>
@@ -155,6 +160,17 @@ export default async function ActivityPage({
                 </p>
                 <p className="text-earth leading-relaxed text-sm">
                   {activity.local_tip}
+                </p>
+              </div>
+            )}
+            {/* Origin story — the personal "I found this while..." bit */}
+            {activity.origin_story && (
+              <div>
+                <h2 className="text-xs font-semibold text-earth-muted uppercase tracking-widest mb-3">
+                  How I found this
+                </h2>
+                <p className="text-earth leading-relaxed text-base italic">
+                  {activity.origin_story}
                 </p>
               </div>
             )}

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Activity } from '@/lib/types'
 import { isWikimediaUrl } from '@/lib/isWikimediaUrl'
+import { getShortAddress } from '@/lib/formatAddress'
 
 interface ActivityCardProps {
   activity: Activity
@@ -71,7 +72,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
           {activity.address && (
             <p className="text-xs text-earth-muted/60 mt-auto pt-1 flex items-center gap-1">
               <span aria-hidden>📍</span>
-              {activity.address}
+              {getShortAddress(activity.address)}
             </p>
           )}
         </div>

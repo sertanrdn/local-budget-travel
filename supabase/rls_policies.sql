@@ -67,3 +67,24 @@ using (
   bucket_id = 'avatars'
   and auth.uid()::text = (storage.foldername(name))[1]
 );
+
+-- Anyone can view activity photos (bucket is public, but SELECT policy is still required for direct table access)
+create policy "Public read access for activity photos"
+on storage.objects for select
+using (bucket_id = 'activity-photos');
+
+-- A user can only upload into their own folder: activity-photos/{their_user_id}/...
+create policy "Users can upload their own activity photos"
+on storage.objects for insert
+with check (
+  bucket_id = 'activity-photos'
+  and auth.uid()::text = (storage.foldername(name))[1]
+);
+
+-- A user can only delete files in their own folder
+create policy "Users can delete their own activity photos"
+on storage.objects for delete
+using (
+  bucket_id = 'activity-photos'
+  and auth.uid()::text = (storage.foldername(name))[1]
+);
