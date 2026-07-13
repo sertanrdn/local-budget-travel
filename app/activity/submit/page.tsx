@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -75,7 +75,11 @@ export default function SubmitActivityPage() {
           The local tip is the whole point — tell people what only someone
           who&apos;s actually been there would know.
         </p>
-        <ActivityForm mode="create" user={authedUser} citiesLived={profile?.cities_lived ?? []} />
+        <ActivityForm
+          mode="create"
+          user={authedUser}
+          citiesLived={profile?.cities_lived ?? []}
+        />
       </main>
       <Footer />
     </div>
