@@ -17,7 +17,7 @@ async function getActivity(id: string): Promise<Activity | null> {
     .select("*")
     .eq("id", id)
     .single();
-  if (error || data) return null;
+  if (error || !data) return null;
   return data;
 }
 
