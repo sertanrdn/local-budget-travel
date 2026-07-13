@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -14,6 +14,15 @@ export function ActivityActions({ activity }: { activity: Activity }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!confirmOpen) return
+    const original = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = original
+    }
+  }, [confirmOpen]);
 
   if (!user || user.id !== activity.submitted_by) return null;
 
@@ -63,7 +72,7 @@ export function ActivityActions({ activity }: { activity: Activity }) {
       </div>
       {confirmOpen && (
         <div
-          className="fixed inset-0 bg-earth/40 backdrop-blur-sm flex items-center justify-center z-50 px-6"
+          className="fixed inset-0 bg-earth/40 backdrop-blur-sm flex items-center justify-center z-9999 px-6"
           onClick={() => !deleting && setConfirmOpen(false)}
         >
           <div
