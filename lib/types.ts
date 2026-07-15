@@ -32,6 +32,7 @@ export interface Activity {
   submitted_by: string | null
   origin_story: string | null
   is_curator_pick: boolean
+  submitted_as_local: boolean
   created_at: string
   updated_at: string
 }
