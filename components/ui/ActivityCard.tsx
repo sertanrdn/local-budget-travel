@@ -41,13 +41,19 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             <span
               className={`shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full ${
                 activity.is_free
-                  ? 'bg-olive/10 text-olive'
-                  : 'bg-terracotta/10 text-terracotta'
+                  ? "bg-olive/10 text-olive"
+                  : "bg-terracotta/10 text-terracotta"
               }`}
             >
-              {activity.is_free ? 'Free' : activity.estimated_cost || "Paid"}
+              {activity.is_free ? "Free" : activity.estimated_cost || "Paid"}
             </span>
           </div>
+          {activity.submitted_as_local && (
+            <span className="inline-flex items-center gap-1 w-fit bg-olive/10 text-olive text-xs font-semibold px-2.5 py-1 rounded-full">
+              <span aria-hidden>🏠</span>
+              From a local
+            </span>
+          )}
 
           {/* Description */}
           {activity.description && (
@@ -78,5 +84,5 @@ export function ActivityCard({ activity }: ActivityCardProps) {
         </div>
       </div>
     </Link>
-  )
+  );
 }

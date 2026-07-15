@@ -252,6 +252,7 @@ export function ActivityForm({
         estimated_cost: isFree ? "Free" : estimatedCost.trim() || null,
         local_tip: localTip.trim(),
         origin_story: originStory.trim() || null,
+        submitted_as_local: isLocalToCity,
       };
 
       let activityId: string;
