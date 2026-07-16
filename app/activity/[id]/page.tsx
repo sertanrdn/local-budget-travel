@@ -235,6 +235,34 @@ export default async function ActivityPage({
                     </dd>
                   </div>
                 )}
+                {activity.profiles?.username && (
+                  <div className="flex items-start justify-between gap-3">
+                    <dt className="text-sm text-earth-muted">Submitted by</dt>
+                    <dd className="text-sm font-medium text-earth">
+                      <Link
+                        href={`/profile/${activity.profiles.username}`}
+                        className="inline-flex items-center gap-2 hover:text-terracotta transition-colors"
+                      >
+                        <span className="relative w-5 h-5 rounded-full bg-sand/60 overflow-hidden shrink-0 flex items-center justify-center">
+                          {activity.profiles.avatar_url ? (
+                            <Image
+                              src={activity.profiles.avatar_url}
+                              alt=""
+                              fill
+                              className="object-cover"
+                              sizes="20px"
+                            />
+                          ) : (
+                            <span aria-hidden className="text-[10px]">
+                              👤
+                            </span>
+                          )}
+                        </span>
+                        {activity.profiles.username}
+                      </Link>
+                    </dd>
+                  </div>
+                )}
               </dl>
             </div>
 
