@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Activity } from '@/lib/types'
+import type { Activity, ActivitySubmitter } from '@/lib/types'
 import { isWikimediaUrl } from '@/lib/isWikimediaUrl'
 import { getShortAddress } from '@/lib/formatAddress'
 
 interface ActivityCardProps {
-  activity: Activity
+  activity: Activity & { profiles?: ActivitySubmitter | null }
 }
 
 export function ActivityCard({ activity }: ActivityCardProps) {
@@ -74,13 +74,37 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             </div>
           )}
 
-          {/* Address */}
-          {activity.address && (
-            <p className="text-xs text-earth-muted/60 mt-auto pt-1 flex items-center gap-1">
-              <span aria-hidden>📍</span>
-              {getShortAddress(activity.address)}
-            </p>
-          )}
+          {/* Address + submitter byline */}
+          <div className="mt-auto pt-1 flex items-center justify-between gap-2">
+            {activity.address && (
+              <p className="text-xs text-earth-muted/60 flex items-center gap-1 min-w-0">
+                <span aria-hidden>📍</span>
+                <span className="truncate">
+                  {getShortAddress(activity.address)}
+                </span>
+              </p>
+            )}
+            {activity.profiles?.username && (
+              <span className="text-xs text-earth-muted/60 flex items-center gap-1.5 shrink-0">
+                <span className="relative w-4 h-4 rounded-full bg-sand/60 overflow-hidden shrink-0 flex items-center justify-center">
+                  {activity.profiles.avatar_url ? (
+                    <Image
+                      src={activity.profiles.avatar_url}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="16px"
+                    />
+                  ) : (
+                    <span aria-hidden className="text-[8px]">
+                      👤
+                    </span>
+                  )}
+                </span>
+                {activity.profiles.username}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </Link>
