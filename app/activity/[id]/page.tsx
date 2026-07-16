@@ -68,7 +68,10 @@ export default async function ActivityPage({
         {/* Breadcrumb */}
         {city && category && (
           <nav className="flex items-center gap-2 text-sm text-earth-muted mb-8">
-            <Link href="/cities" className="hover:text-terracotta transition-colors">
+            <Link
+              href="/cities"
+              className="hover:text-terracotta transition-colors"
+            >
               Cities
             </Link>
             <span>/</span>
@@ -86,7 +89,9 @@ export default async function ActivityPage({
               {category.name}
             </Link>
             <span>/</span>
-            <span className="text-earth truncate max-w-48">{activity.title}</span>
+            <span className="text-earth truncate max-w-48">
+              {activity.title}
+            </span>
           </nav>
         )}
 
@@ -104,12 +109,20 @@ export default async function ActivityPage({
                 <span
                   className={`text-xs font-semibold px-3 py-1 rounded-full ${
                     activity.is_free
-                      ? 'bg-olive/10 text-olive'
-                      : 'bg-terracotta/10 text-terracotta'
+                      ? "bg-olive/10 text-olive"
+                      : "bg-terracotta/10 text-terracotta"
                   }`}
                 >
-                  {activity.is_free ? '✓ Free' : activity.estimated_cost || 'Paid'}
+                  {activity.is_free
+                    ? "✓ Free"
+                    : activity.estimated_cost || "Paid"}
                 </span>
+                {activity.submitted_as_local && (
+                  <span className="inline-flex items-center gap-1 bg-olive/10 text-olive text-xs font-semibold px-3 py-1 rounded-full">
+                    <span aria-hidden>🏠</span>
+                    From a local
+                  </span>
+                )}
               </div>
               <div className="flex items-start justify-between gap-3">
                 <h1 className="text-3xl font-bold text-earth leading-tight">
@@ -188,10 +201,12 @@ export default async function ActivityPage({
                   <dt className="text-sm text-earth-muted">Cost</dt>
                   <dd
                     className={`text-sm font-semibold ${
-                      activity.is_free ? 'text-olive' : 'text-terracotta'
+                      activity.is_free ? "text-olive" : "text-terracotta"
                     }`}
                   >
-                    {activity.is_free ? 'Free' : activity.estimated_cost || 'Paid'}
+                    {activity.is_free
+                      ? "Free"
+                      : activity.estimated_cost || "Paid"}
                   </dd>
                 </div>
                 {city && (
@@ -212,8 +227,12 @@ export default async function ActivityPage({
                 )}
                 {activity.address && (
                   <div className="flex items-start justify-between gap-3">
-                    <dt className="text-sm text-earth-muted shrink-0">Address</dt>
-                    <dd className="text-sm text-earth text-right">{activity.address}</dd>
+                    <dt className="text-sm text-earth-muted shrink-0">
+                      Address
+                    </dt>
+                    <dd className="text-sm text-earth text-right">
+                      {activity.address}
+                    </dd>
                   </div>
                 )}
               </dl>
@@ -255,5 +274,5 @@ export default async function ActivityPage({
 
       <Footer />
     </div>
-  )
+  );
 }

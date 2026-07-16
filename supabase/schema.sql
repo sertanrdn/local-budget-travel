@@ -104,6 +104,7 @@ alter table activities add column if not exists submitted_by uuid references pro
 alter table activities add column if not exists origin_story text;
 alter table activities add column if not exists is_curator_pick boolean default false;
 alter table activities add column if not exists updated_at timestamptz default now();
+alter table activities add column if not exists submitted_as_local boolean default false;
 
 -- ============================================================
 -- Seed: Istanbul
