@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import type { Activity, Category, City } from '@/lib/types'
+import type { ActivityWithSubmitter, Category, City } from '@/lib/types'
 import { ActivityMap } from '@/components/maps/ActivityMap'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
@@ -10,10 +10,10 @@ import { isWikimediaUrl } from '@/lib/isWikimediaUrl'
 import { getShortAddress } from '@/lib/formatAddress'
 import { ActivityActions } from '@/components/activity/ActivityActions'
 
-async function getActivity(id: string): Promise<Activity | null> {
+async function getActivity(id: string): Promise<ActivityWithSubmitter | null> {
   const { data, error } = await supabase
     .from('activities')
-    .select('*')
+    .select('*, profiles(username, avatar_url)')
     .eq('id', id)
     .single()
 
@@ -232,6 +232,34 @@ export default async function ActivityPage({
                     </dt>
                     <dd className="text-sm text-earth text-right">
                       {activity.address}
+                    </dd>
+                  </div>
+                )}
+                {activity.profiles?.username && (
+                  <div className="flex items-start justify-between gap-3">
+                    <dt className="text-sm text-earth-muted">Submitted by</dt>
+                    <dd className="text-sm font-medium text-earth">
+                      <Link
+                        href={`/profile/${activity.profiles.username}`}
+                        className="inline-flex items-center gap-2 hover:text-terracotta transition-colors"
+                      >
+                        <span className="relative w-5 h-5 rounded-full bg-sand/60 overflow-hidden shrink-0 flex items-center justify-center">
+                          {activity.profiles.avatar_url ? (
+                            <Image
+                              src={activity.profiles.avatar_url}
+                              alt=""
+                              fill
+                              className="object-cover"
+                              sizes="20px"
+                            />
+                          ) : (
+                            <span aria-hidden className="text-[10px]">
+                              👤
+                            </span>
+                          )}
+                        </span>
+                        {activity.profiles.username}
+                      </Link>
                     </dd>
                   </div>
                 )}

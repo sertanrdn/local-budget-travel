@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
-import type { Activity, Category, City } from '@/lib/types'
+import type { ActivityWithSubmitter, Category, City } from '@/lib/types'
 import { ActivityCard } from '@/components/ui/ActivityCard'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
@@ -44,10 +44,10 @@ async function getCategoryByName(
 async function getActivitiesByCategory(
   categoryId: string,
   cityId: string
-): Promise<Activity[]> {
+): Promise<ActivityWithSubmitter[]> {
   const { data, error } = await supabase
     .from('activities')
-    .select('*')
+    .select('*, profiles(username, avatar_url)')
     .eq('category_id', categoryId)
     .eq('city_id', cityId)
     .order('created_at')

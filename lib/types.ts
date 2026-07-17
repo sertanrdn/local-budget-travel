@@ -46,3 +46,12 @@ export interface Profile {
   avatar_url: string | null
   created_at: string
 }
+
+export interface ActivitySubmitter {
+  username: string
+  avatar_url: string | null
+}
+
+export interface ActivityWithSubmitter extends Activity {
+  profiles: ActivitySubmitter | null
+}
