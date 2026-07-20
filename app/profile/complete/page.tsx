@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
@@ -10,6 +10,7 @@ import { uploadAvatar } from "@/lib/uploadAvatar";
 import type { City } from "@/lib/types";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import Link from "next/link";
 
 const inputClass =
   "w-full px-4 py-3 rounded-xl border border-sand bg-white text-earth placeholder:text-earth-muted/50 focus:outline-none focus:border-terracotta text-sm transition-colors";
@@ -28,6 +29,8 @@ async function getAllCities(): Promise<City[]> {
 
 export default function CompleteProfilePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isWelcome = searchParams.get('welcome') === '1'
   const { profile } = useUser();
 
   const [authedUser, setAuthedUser] = useState<User | null | undefined>(
@@ -89,17 +92,28 @@ export default function CompleteProfilePage() {
           One last step
         </p>
         <h1 className="text-3xl font-bold text-earth leading-tight mb-2">
-          Complete your profile
+          {isWelcome ? "Welcome! One quick thing…" : "Complete your profile"}
         </h1>
         <p className="text-earth-muted text-sm mb-8">
-          Tell us a bit about yourself and where you&apos;ve lived — this is
-          what makes your tips trustworthy to other travelers.
+          {isWelcome
+            ? "You're all set to browse right away. If you ever want to submit a spot, you'll just need a short bio and at least one city you've lived in — might as well do it now."
+            : "Tell us a bit about yourself and where you've lived — this is what makes your tips trustworthy to other travelers."}
         </p>
         <CompleteProfileForm
           key={profile.id}
           user={authedUser}
           profile={profile}
         />
+        {isWelcome && (
+          <p className="text-center mt-6">
+            <Link
+              href="/cities"
+              className="text-sm text-earth-muted hover:text-terracotta transition-colors"
+            >
+              Skip for now — take me to the cities
+            </Link>
+          </p>
+        )}
       </main>
       <Footer />
     </div>

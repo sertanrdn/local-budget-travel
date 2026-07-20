@@ -8,6 +8,8 @@ import { useUser } from "@/hooks/useUser";
 import { ActivityForm } from "@/components/activity/ActivityForm";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { isProfileComplete } from "@/lib/profileComplete";
+import Link from "next/link";
 
 export default function SubmitActivityPage() {
   const router = useRouter();
@@ -55,6 +57,33 @@ export default function SubmitActivityPage() {
         <Header />
         <main className="flex-1 flex items-center justify-center text-earth-muted text-sm">
           Loading…
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!isProfileComplete(profile)) {
+    return (
+      <div className="min-h-screen bg-warm-white text-earth font-sans flex flex-col">
+        <Header />
+        <main className="flex-1 px-6 py-16 max-w-md mx-auto w-full text-center">
+          <div className="text-5xl mb-4" aria-hidden>
+            ✍️
+          </div>
+          <h1 className="text-2xl font-bold text-earth mb-2">
+            Complete your profile first
+          </h1>
+          <p className="text-earth-muted mb-8">
+            To submit an activity, we need a short bio and at least one city
+            you&apos;ve lived in — this is what makes your tips trustworthy.
+          </p>
+          <Link
+            href="/profile/complete"
+            className="bg-terracotta text-white px-6 py-3 rounded-full font-medium hover:bg-terracotta-dark transition-colors"
+          >
+            Complete your profile
+          </Link>
         </main>
         <Footer />
       </div>

@@ -38,7 +38,7 @@ export default function SignupPage() {
       password,
       options: { 
         data: { username: username.trim() },
-        emailRedirectTo: `${window.location.origin}/cities`,
+        emailRedirectTo: `${window.location.origin}/profile/complete?welcome=1`,
       },
     })
     setLoading(false)
