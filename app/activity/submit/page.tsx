@@ -8,13 +8,13 @@ import { useUser } from "@/hooks/useUser";
 import { ActivityForm } from "@/components/activity/ActivityForm";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { isProfileComplete } from "@/lib/profileComplete";
+import Link from "next/link";
 
 export default function SubmitActivityPage() {
   const router = useRouter();
-  const { profile } = useUser();
+  const { profile, loading: profileLoading } = useUser();
 
-  // Same auth-gating pattern as /profile/edit: undefined = not checked
-  // yet, null = confirmed signed out, User = confirmed signed in.
   const [authedUser, setAuthedUser] = useState<User | null | undefined>(
     undefined
   );
@@ -49,12 +49,44 @@ export default function SubmitActivityPage() {
     }
   }, [authedUser, router]);
 
-  if (authedUser === undefined || authedUser === null) {
+  // Wait for BOTH auth to resolve AND the profile row to finish loading
+  // before deciding whether to show the gate. Without profileLoading,
+  // there's a brief window where authedUser is confirmed but profile is
+  // still null (fetch in flight), which would incorrectly flash the
+  // "complete your profile" gate for users who are actually complete.
+  if (authedUser === undefined || authedUser === null || profileLoading) {
     return (
       <div className="min-h-screen bg-warm-white text-earth font-sans flex flex-col">
         <Header />
         <main className="flex-1 flex items-center justify-center text-earth-muted text-sm">
           Loading…
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!isProfileComplete(profile)) {
+    return (
+      <div className="min-h-screen bg-warm-white text-earth font-sans flex flex-col">
+        <Header />
+        <main className="flex-1 px-6 py-16 max-w-md mx-auto w-full text-center">
+          <div className="text-5xl mb-4" aria-hidden>
+            ✍️
+          </div>
+          <h1 className="text-2xl font-bold text-earth mb-2">
+            Complete your profile first
+          </h1>
+          <p className="text-earth-muted mb-8">
+            To submit an activity, we need a short bio and at least one city
+            you&apos;ve lived in — this is what makes your tips trustworthy.
+          </p>
+          <Link
+            href="/profile/complete"
+            className="bg-terracotta text-white px-6 py-3 rounded-full font-medium hover:bg-terracotta-dark transition-colors"
+          >
+            Complete your profile
+          </Link>
         </main>
         <Footer />
       </div>

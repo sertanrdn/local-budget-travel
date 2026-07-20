@@ -36,7 +36,10 @@ export default function SignupPage() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { username: username.trim() } },
+      options: { 
+        data: { username: username.trim() },
+        emailRedirectTo: `${window.location.origin}/profile/complete?welcome=1`,
+      },
     })
     setLoading(false)
 
