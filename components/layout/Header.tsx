@@ -41,22 +41,6 @@ export function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
-  // Hard-gate incomplete profiles: bio and at least one city lived are
-  // required before using the rest of the app. Runs on every page since
-  // Header renders everywhere. Skips the redirect once they're already
-  // on the completion page, to avoid a redirect loop.
-  useEffect(() => {
-    if (loading) return;
-    if (!user || !profile) return;
-
-    const isIncomplete =
-      !profile.bio?.trim() || (profile.cities_lived?.length ?? 0) === 0;
-
-    if (isIncomplete && pathname !== "/profile/complete") {
-      router.push("/profile/complete");
-    }
-  }, [loading, user, profile, pathname, router]);
-
   async function handleLogout() {
     await supabase.auth.signOut();
     setIsOpen(false);
