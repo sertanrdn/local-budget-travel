@@ -28,13 +28,6 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     let cancelled = false;
 
-    // Covers the case where the PASSWORD_RECOVERY event already fired
-    // (session exchange happens fast) before this listener attached.
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (cancelled) return;
-      if (session) setRecoveryReady(true);
-    });
-
     const { data: listener } = supabase.auth.onAuthStateChange((event) => {
       if (cancelled) return;
       if (event === "PASSWORD_RECOVERY") {
@@ -42,8 +35,8 @@ export default function ResetPasswordPage() {
       }
     });
 
-    // If neither the session check nor the event fires within a few
-    // seconds, treat the link as invalid/expired rather than leaving
+    // If the PASSWORD_RECOVERY event doesn't fire within a few seconds,
+    // treat the link as invalid/expired rather than leaving
     // the user staring at a permanent loading state.
     const timeoutId = setTimeout(() => {
       if (!cancelled) {
