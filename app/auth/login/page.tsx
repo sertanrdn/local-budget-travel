@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { PasswordInput } from '@/components/ui/PasswordInput'
 
 const inputClass =
   'w-full px-4 py-3 rounded-xl border border-sand bg-white text-earth placeholder:text-earth-muted/50 focus:outline-none focus:border-terracotta text-sm transition-colors'
@@ -63,13 +64,18 @@ export default function LoginPage() {
 
           <label className="flex flex-col gap-1.5">
             <span className="text-sm font-medium text-earth">Password</span>
-            <input
-              type="password"
+            <PasswordInput
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className={inputClass}
+              autoComplete="current-password"
             />
+            <Link
+              href="/auth/forgot-password"
+              className="text-xs text-earth-muted hover:text-terracotta transition-colors self-end mt-1"
+            >
+              Forgot password?
+            </Link>
           </label>
 
           {error && (

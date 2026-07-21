@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { PasswordInput } from '@/components/ui/PasswordInput'
 
 const inputClass =
   'w-full px-4 py-3 rounded-xl border border-sand bg-white text-earth placeholder:text-earth-muted/50 focus:outline-none focus:border-terracotta text-sm transition-colors'
@@ -105,14 +106,13 @@ export default function SignupPage() {
 
             <label className="flex flex-col gap-1.5">
               <span className="text-sm font-medium text-earth">Password</span>
-              <input
-                type="password"
+              <PasswordInput
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
                 placeholder="At least 6 characters"
-                className={inputClass}
+                autoComplete='new-password'
               />
             </label>
 
