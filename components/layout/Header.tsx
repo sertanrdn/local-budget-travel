@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useUser } from '@/hooks/useUser'
 
-const NAV_LINKS = [
+export const NAV_LINKS = [
   { href: '/cities', label: 'Cities' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
