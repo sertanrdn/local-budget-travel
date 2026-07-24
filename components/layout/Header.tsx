@@ -6,8 +6,9 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useUser } from '@/hooks/useUser'
+import { MobileNavDrawer } from './MobileNavDrawer'
 
-const NAV_LINKS = [
+export const NAV_LINKS = [
   { href: '/cities', label: 'Cities' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
@@ -169,83 +170,21 @@ export function Header() {
           aria-expanded={isOpen}
         >
           <span className="text-2xl leading-none" aria-hidden>
-            {isOpen ? "\u00D7" : "\u2630"}
+            &#x2630;
           </span>
         </button>
       </div>
 
       {/* Mobile nav dropdown — placeholder, full redesign coming in a later branch */}
-      {isOpen && (
-        <nav className="sm:hidden max-w-4xl mx-auto mt-4 flex flex-col gap-1">
-          {NAV_LINKS.map((link) => {
-            const isActive =
-              pathname === link.href || pathname.startsWith(`${link.href}/`);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className={`text-sm font-medium px-2 py-2.5 rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-terracotta/10 text-terracotta"
-                    : "text-earth-muted hover:bg-sand/40"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-          <div className="mt-2 pt-2 border-t border-sand/60 flex flex-col gap-1">
-            {!loading &&
-              (user ? (
-                <>
-                  {profile?.username && (
-                    <Link
-                      href={`/profile/${profile.username}`}
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-2.5 px-2 py-2.5 rounded-lg text-earth-muted hover:bg-sand/40 transition-colors"
-                    >
-                      <Avatar avatarUrl={profile.avatar_url} size="sm" />
-                      {profile.username}
-                    </Link>
-                  )}
-                  <Link
-                    href="/activity/submit"
-                    onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-earth hover:bg-sand/40 transition-colors"
-                  >
-                    <PlusCircleIcon />
-                    Submit Activity
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="text-sm font-medium px-2 py-2.5 rounded-lg text-earth-muted hover:bg-sand/40 hover:text-terracotta transition-colors text-left"
-                  >
-                    Log out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/auth/login"
-                    onClick={() => setIsOpen(false)}
-                    className="text-sm font-medium px-2 py-2.5 rounded-lg text-earth-muted hover:bg-sand/40 transition-colors"
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    href="/auth/signup"
-                    onClick={() => setIsOpen(false)}
-                    className="text-sm font-medium px-2 py-2.5 rounded-lg text-terracotta hover:bg-terracotta/10 transition-colors"
-                  >
-                    Sign up
-                  </Link>
-                </>
-              ))}
-          </div>
-        </nav>
-      )}
+      <MobileNavDrawer 
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        pathname={pathname}
+        user={user}
+        profile={profile}
+        loading={loading}
+        onLogout={handleLogout}
+      />
     </header>
   );
 }
